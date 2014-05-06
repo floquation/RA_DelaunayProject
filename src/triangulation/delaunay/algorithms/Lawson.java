@@ -1,6 +1,7 @@
 package triangulation.delaunay.algorithms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -396,7 +397,7 @@ public class Lawson implements DelaunayAlgorithm {
 	}
 	
 	/**
-	 * TODO: BUGGED. SOMETIMES MESSES UP THE GRAPH STRUCTURE. (e.g. triangles have 1, or 4 neighbours, while they should have 3.)
+	 * TODO: not-BUGGED. SOMETIMES MESSES UP THE GRAPH STRUCTURE. (e.g. triangles have 1, or 4 neighbours, while they should have 3.)
 	 * 
      * Update the triangulation using an edge-flip algorithm.
      * 
@@ -591,7 +592,69 @@ public class Lawson implements DelaunayAlgorithm {
         //Edge-flip the new vertices:
         edgeFlip(pntC,trilation,newTriangles);
 	}
+	
+	//@Override
+	public void new_delaunayRemove(Pnt site, Triangulation trilation) {
+		// One of the triangles which contains site
+		Triangle primary_triangle = trilation.locate(site);
+		
+		// All triangles that contain site
+		List<Triangle> surTriangles = trilation.surroundingTriangles(site, primary_triangle);
+		
+		// When site is removed,
+		// the remaining points form a polygon that needs to be triangulated
+		List<Pnt> polygonPoints = new ArrayList<Pnt>();
+		Pnt previousPoint = site;
+		for(Triangle t: surTriangles) {
+			Pnt nextPoint = t.getVertexButNot(previousPoint, site);
+			polygonPoints.add(nextPoint);
+			previousPoint = nextPoint;
+		}
+		
+		// Triangulate that polygon using an ear-clipping method
+		int index = 0;
+		
+		while(!polygonPoints.isEmpty()) {
+			// Just take some points
+			int n = polygonPoints.size();
+			Pnt points[] = new Pnt[] {
+					polygonPoints.get(index % n), 
+					polygonPoints.get((index + 1) % n), 
+					polygonPoints.get((index + 2) % n)};
+			
+			// Now we want to know if these points make an ear
+			// According to http://stackoverflow.com/questions/2816572/diagonal-of-polygon-is-inside-or-outside
+			// p1.x * p2.y + p2.x * p3.y + p3.x * p1.y - p2.x * p1.y - p3.x * p2.y - p1.x * p3.y
+			// That looks a bit like the sum of a cross product to me. so let's do that
+			
+			// First the points are transposed
+			Pnt x = new Pnt(points[0].coord(0), points[1].coord(0), points[2].coord(0));
+			Pnt y = new Pnt(points[0].coord(1), points[1].coord(1), points[2].coord(1));
+			Pnt cross = x.cross(y);
+			double sum = cross.coord(0) + cross.coord(1) + cross.coord(2);
+			boolean isEar = sum > 0;
+			
+			// If it's an ear, we can remove it..
+			if(isEar) {
+				;
+			}
+			
+			// vertices[1] is an ear if 
+			// the line between (vertices[0], vertices[1]) crosses the polygon
+		}
+		
+		// I guess I have an idea how to calculate the new triangles.
+		// How do I add them??
+		
+		// The code seems pretty messed up
+		//
+		
+		
+	}
 
+	/**
+	 * TODO: BUGGED. Sometimes generates incorrect triangles (negative surface)
+	 */
 	@Override
 	public void delaunayRemove(Pnt site, Triangulation trilation) {
 		Triangle primary_triangle = trilation.locate(site);
@@ -656,7 +719,33 @@ public class Lawson implements DelaunayAlgorithm {
         edgeFlip(trilation,toBeChecked);
 	}
 	
+	// Tests removing a point from a convex polygon
+	public static void debugRemoval() {
+		// This constructor is obviously  insane
+		Triangle initialTriangle = new Triangle(Arrays.asList(
+				new Pnt(-10000, -1000),
+				new Pnt(0, 1000),
+				new Pnt(1000, 0)));
+		Triangulation trilation = new Triangulation(initialTriangle, new Lawson());
+		
+		// Construct a convex polygon
+		Pnt malware = new Pnt(0, 3);
+		trilation.delaunayPlace(new Pnt(0, 5));  // top
+		trilation.delaunayPlace(new Pnt(-2, 0)); // left below
+		trilation.delaunayPlace(malware);
+		trilation.delaunayPlace(new Pnt(0, 1));  // bottom
+		trilation.delaunayPlace(new Pnt(2, 0));  // right below
+		trilation.isGraphStillCorrect("debugRemoval - Before removal");
+		
+		// Omg, I can't believe you did that!?
+		trilation.delaunayRemove(malware);
+		trilation.isGraphStillCorrect("debugRemoval - After removal");
+	}
+	
     public static void main(String[] args){
+    	debugRemoval();
+    	
+    	/*
     	//Check if differently ordered set is identical:
     	Pnt pnt1 = new Pnt(10, 10);
     	Pnt pnt2 = new Pnt(30, -10);
@@ -668,6 +757,7 @@ public class Lawson implements DelaunayAlgorithm {
     	facet2.add(pnt1);
     	
     	System.out.println("facet1 == facet2? " + facet1.equals(facet2));
+    	*/
     }
     
 }

@@ -63,7 +63,7 @@ public class Triangulation extends AbstractSet<Triangle> {
     
     // TODO: Do this neatly. 
     // Best method is a point-eating-virus, but Lawson's DelaunayRemover method must work first.
-    private Pnt[] OuterBound = new Pnt[]{new Pnt(0,0), new Pnt(1000,1000)}; //OuterBound. No point may be outside. 
+    private Pnt[] OuterBound = new Pnt[]{new Pnt(0,0), new Pnt(10000,10000)}; //OuterBound. No point may be outside. 
     /**
      * All sites must fall within the initial triangle.
      * @param triangle the initial triangle
@@ -340,6 +340,7 @@ public class Triangulation extends AbstractSet<Triangle> {
 	
 
     /**
+     * Adds a triangle to the graph (but doesn't link it??)
      * @author Kevin van As
      * @param triangle
      */
