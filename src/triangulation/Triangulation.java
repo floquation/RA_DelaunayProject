@@ -22,7 +22,6 @@ package triangulation;
 
 import java.util.AbstractSet;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -62,8 +61,9 @@ public class Triangulation extends AbstractSet<Triangle> {
     private Set<Set<Pnt>> boundary_PSLG;		// Holds the facets which form a boundary and thus may not be altered
     private DelaunayAlgorithm algorithm = null;	// The algorithm to use for the triangulation
     
-    private Pnt[] OuterBound = new Pnt[]{new Pnt(0,0), new Pnt(1000,1000)}; //OuterBound. No point may be outside. //TODO: Do this neatly. Best method is a point-eating-virus, but Lawson's DelaunayRemover method must work first.
-
+    // TODO: Do this neatly. 
+    // Best method is a point-eating-virus, but Lawson's DelaunayRemover method must work first.
+    private Pnt[] OuterBound = new Pnt[]{new Pnt(0,0), new Pnt(1000,1000)}; //OuterBound. No point may be outside. 
     /**
      * All sites must fall within the initial triangle.
      * @param triangle the initial triangle

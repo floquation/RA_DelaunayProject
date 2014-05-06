@@ -41,7 +41,6 @@ public class Lawson implements DelaunayAlgorithm {
         if (triangle == null)
             throw new IllegalArgumentException("No containing triangle");
         if (triangle.contains(site)) return;
-
         
     	// Connect the new site to the vertices of the containing triangle
         Set<Triangle> newTriangles = new HashSet<Triangle>();
@@ -57,6 +56,7 @@ public class Lawson implements DelaunayAlgorithm {
             Triangle nb = trilation.neighborOpposite(vertex, triangle);
             if(nb!=null) trilation.addLinkToGraph(newTriangle, nb); //nb may be null if the site is outside the domain.
         }
+        
         // Add the links to each other:
         for (Triangle newTriangle: newTriangles)
         	for (Triangle other: newTriangles)
@@ -64,9 +64,6 @@ public class Lawson implements DelaunayAlgorithm {
         			
         // And remove the containing triangle, which no longer is a valid triangle (we inserted a site in its interior):
         trilation.removeFromGraph(triangle);
-        
-
-        
         	
         // Update the triangulation using an edge-flip algorithm, to make it Delaunay again:
         edgeFlip(site, trilation, newTriangles);		
@@ -84,25 +81,28 @@ public class Lawson implements DelaunayAlgorithm {
 	 * @return success?
 	 */
 	@Override
-	public boolean delaunayPlaceBoundary(Pnt site, Pnt anchor,
+	public boolean delaunayPlaceBoundary(Pnt site, Pnt anchor, 
 			Triangulation trilation) {
+		
         // Locate containing triangle
         Triangle primary_triangle = trilation.locate(site);
+        
         // Give up if no containing triangle
         if (primary_triangle == null)
             throw new IllegalArgumentException("No containing triangle");
+        
         if(primary_triangle.contains(anchor)){
         	//The newly placed boundary does not intersect any triangles. Treat the site like a normal point.
         	delaunayPlace(site,trilation);
         	return true;
         }
+        
         if (primary_triangle.contains(site)){
         	//The triangle already contains the site. So no new point is being added, just a boundary line.
         	//Lawson's job is done!
         	if(debug)System.out.println("(Lawson) Triangle already contains `site'?");
         	return true;
-        }else{
-        	
+        }else{	
         	//Step 1: connect the new site
         	
         	// Connect the new site to the vertices of the containing triangle
@@ -137,6 +137,7 @@ public class Lawson implements DelaunayAlgorithm {
             	if(debug)System.out.println("(Lawson)(1) face is already PSLG: " + facet_pq.toString());
             	return false; //The input boundary does not satisfy PSLG: boundaries are overlapping.
             }
+            
             //First remove the newly created triangle containing facet_pq...
             Triangle incorrectTriangle = null;
             int i;
@@ -164,6 +165,7 @@ public class Lawson implements DelaunayAlgorithm {
 	        for(Pnt vertex : facet_pq){
 	        	pnt_C_history.add(vertex);
 	        }
+	        
 			while(true){
             	facet_pq_previous = facet_pq;
 	            

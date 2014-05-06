@@ -168,7 +168,7 @@ public class Triangle extends ArraySet<Pnt> {
 		return pnt;
 	}
     public double getSurfaceArea(){
-    	return Math.abs((this.get(0).subtract(this.get(1))).cross(this.get(0).subtract(this.get(2))))/2;
+    	return Math.abs((this.get(0).subtract(this.get(1))).cross_z(this.get(0).subtract(this.get(2))))/2;
     }
     
     public static void main(String[] args){

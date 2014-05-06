@@ -320,7 +320,7 @@ public class Pnt {
      * @param b Vector 2
      * @return (this x b)_z
      */
-	public double cross(Pnt b){
+	public double cross_z(Pnt b){
 		return this.coord(0)*b.coord(1)-this.coord(1)*b.coord(0);
 	}
 

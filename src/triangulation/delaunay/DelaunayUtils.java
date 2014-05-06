@@ -21,24 +21,27 @@ public abstract class DelaunayUtils {
 	 * @return true of the facet's intersect.
 	 */
 	public static boolean intersect(Set<Pnt> facet1, Set<Pnt> facet2){
-		if(facet1.size() != 2 || facet2.size() != 2) throw new IllegalArgumentException();
+		if(facet1.size() != 2 || facet2.size() != 2) 
+			throw new IllegalArgumentException("Facet should have size 2");
 		
+		// Store facet1 in vertices[0, 1]
+		// Store facet2 in vertices[2, 3]
 		Pnt[] vertices = new Pnt[4];
 		int i = 0;
-		for(Pnt pnt : facet1){
-			vertices[i++] = pnt;
+		for(Pnt point : facet1){
+			vertices[i++] = point;
 		}
-		for(Pnt pnt : facet2){
-			vertices[i++] = pnt;
+		for(Pnt point : facet2){
+			vertices[i++] = point;
 		}
 		
 		Pnt BmA = vertices[1].subtract(vertices[0]);
 		Pnt PmA = vertices[2].subtract(vertices[0]);
 		Pnt PmQ = vertices[2].subtract(vertices[3]);
 		
-		double det = BmA.cross(PmQ);
-		double mu = BmA.cross(PmA)/det;
-		double lamb = PmA.cross(PmQ)/det;
+		double det = BmA.cross_z(PmQ);
+		double mu = BmA.cross_z(PmA)/det;
+		double lamb = PmA.cross_z(PmQ)/det;
 		
 		return 0 <= mu && mu <= 1 && 0 <= lamb && lamb <= 1;
 	}

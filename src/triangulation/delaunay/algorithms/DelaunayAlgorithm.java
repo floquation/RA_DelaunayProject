@@ -15,12 +15,21 @@ import triangulation.Triangulation;
  */
 public interface DelaunayAlgorithm {
 	
+	/**
+     * Place a new site into the DT.
+     * Nothing happens if the site matches an existing DT vertex.
+     * @param site the new Pnt
+     * @throws IllegalArgumentException if site does not lie in any triangle
+     */
 	public void delaunayPlace(Pnt site, Triangulation trilation);
 	
+	/// Add boundary vertex from site to anchor????
 	public boolean delaunayPlaceBoundary(Pnt site, Pnt anchor,
 			Triangulation trilation);
-    
+
+	/// ???
 	public void splitBoundary(Set<Pnt> segment, Triangulation trilation);
 
+	/// Remove site from trilation???
 	public void delaunayRemove(Pnt site, Triangulation trilation);
 }
