@@ -595,6 +595,7 @@ public class Lawson implements DelaunayAlgorithm {
 	
 	/**
 	 * Calculate the main direction of a polygon
+	 * @author Laurent Verweijen
 	 * @param polygon A 2-D polygon
 	 * @return Positive number when polygon is clockwise. 
 	 *         Negative number when polygon is counterclockwise.
@@ -613,6 +614,7 @@ public class Lawson implements DelaunayAlgorithm {
 	
 	/**
 	 * Returns whether polygon.get(index) is an ear
+	 * @author Laurent Verweijen
 	 * @param polygon
 	 * @param polygonDirection
 	 * @param index
@@ -665,6 +667,9 @@ public class Lawson implements DelaunayAlgorithm {
 		return isEar;
 	}
 	
+	/**
+	 * @author Laurent Verweijen
+	 */
 	@Override
 	public void delaunayRemove(Pnt site, Triangulation trilation) {
 		// One of the triangles which contains site
@@ -755,7 +760,10 @@ public class Lawson implements DelaunayAlgorithm {
         edgeFlip(trilation,toBeChecked);
 	}
 	
-	// Tests removing a point from a convex polygon
+	/**
+	 * Tests removing a point from a convex polygon
+	 * @author Laurent Verweijen
+	 */
 	public static void debugRemoval() {
 		// This constructor is obviously insane
 		Triangle initialTriangle = new Triangle(Arrays.asList(
