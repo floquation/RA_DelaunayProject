@@ -23,13 +23,27 @@ public interface DelaunayAlgorithm {
      */
 	public void delaunayPlace(Pnt site, Triangulation trilation);
 	
-	/// Add boundary vertex from site to anchor????
+	/**
+	 * Add a solid boundary to triangulation.
+	 * 
+	 * This boundary can not be crossed or removed.
+	 * Therefore this boundary must be part of the triangulation.
+	 * 
+	 * @param site Where the boundary begins
+	 * @param anchor Where the boundary ends
+	 */
 	public boolean delaunayPlaceBoundary(Pnt site, Pnt anchor,
 			Triangulation trilation);
 
-	/// ???
+	/**
+	 * Split a solid boundary in 2 smaller boundaries of the same length.
+	 * @param segment The boundary that is splitted (2 elements)
+	 */
 	public void splitBoundary(Set<Pnt> segment, Triangulation trilation);
 
-	/// Remove site from trilation???
+	/**
+	 * Remove site from trilation
+	 * @param site Vertex to remove
+	 */
 	public void delaunayRemove(Pnt site, Triangulation trilation);
 }

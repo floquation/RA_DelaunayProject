@@ -593,113 +593,149 @@ public class Lawson implements DelaunayAlgorithm {
         edgeFlip(pntC,trilation,newTriangles);
 	}
 	
-	//@Override
-	public void new_delaunayRemove(Pnt site, Triangulation trilation) {
+	/**
+	 * Calculate the main direction of a polygon
+	 * @param polygon A 2-D polygon
+	 * @return Positive number when polygon is clockwise. 
+	 *         Negative number when polygon is counterclockwise.
+	 */
+	private static int polygonDirection(List<Pnt> polygon) {
+		int res = 0;
+		Pnt previousPoint = polygon.get(polygon.size() - 1);
+		for(Pnt point: polygon) {
+			assert(point.dimension() == 2);
+			res += (point.coord(0) - previousPoint.coord(0)) * 
+					(point.coord(1) + previousPoint.coord(1));
+			previousPoint = point;
+		}
+		return res;
+	}
+	
+	/**
+	 * Returns whether polygon.get(index) is an ear
+	 * @param polygon
+	 * @param polygonDirection
+	 * @param index
+	 * @return
+	 */
+	private static boolean isEar(List<Pnt> polygon, int polygonDirection, int index) {
+		//return false;
+		int n = polygon.size();
+		Pnt points[] = new Pnt[] {
+				polygon.get(index % n),
+				polygon.get((index + 1) % n), 
+				polygon.get((index + 2) % n)};
+		System.out.println("Candidate: " + points[0] + ", " + points[1] + ", " + points[2]);
+		
+		// An ear must be convex, but how to calculate that?
+		// According to http://stackoverflow.com/questions/2816572/diagonal-of-polygon-is-inside-or-outside
+		// p1.x * p2.y + p2.x * p3.y + p3.x * p1.y - p2.x * p1.y - p3.x * p2.y - p1.x * p3.y
+		// That looks a bit like the sum of a cross product to me. so let's do that
+		
+		// First the points are transposed
+		Pnt x = new Pnt(points[0].coord(0), points[1].coord(0), points[2].coord(0));
+		Pnt y = new Pnt(points[0].coord(1), points[1].coord(1), points[2].coord(1));
+		Pnt cross = x.cross(y);
+		double side = cross.coord(0) + cross.coord(1) + cross.coord(2);
+		boolean isConvex = -Math.signum(side) == Math.signum(polygonDirection);
+		//System.out.println("side " + side);
+		//System.out.println("dir " + polygonDirection);
+		
+		// An ear may not include any other vertex
+		boolean isEar;
+		if(isConvex) {
+			Triangle tri = new Triangle(points[0], points[1], points[2]);
+			Pnt[] simplex = tri.toArray(new Pnt[0]);
+			
+			// For all other points
+			isEar = true;
+			for(int j = 3; j < polygon.size() && isEar; j++) {
+				Pnt point = polygon.get((index + j) % n);
+				//System.out.println("Possible intruder: " + point);
+				if(point.isOutside(simplex) == null) {
+					//System.out.println("There is an intruder: " + point);
+					isEar = false;
+				}
+			}
+		} else {
+			//System.out.println("Non convexio");
+			isEar = false;
+		}
+		
+		return isEar;
+	}
+	
+	@Override
+	public void delaunayRemove(Pnt site, Triangulation trilation) {
 		// One of the triangles which contains site
 		Triangle primary_triangle = trilation.locate(site);
 		
 		// All triangles that contain site
 		List<Triangle> surTriangles = trilation.surroundingTriangles(site, primary_triangle);
+		// Triangle.moreInfo = true;
+		// System.out.println("surTriangles " + surTriangles);
+		// Triangle.moreInfo = true;
 		
-		// When site is removed,
-		// the remaining points form a polygon that needs to be triangulated
+		// When site is removed, the remaining points form 
+		// a polygon that needs to be triangulated
 		List<Pnt> polygonPoints = new ArrayList<Pnt>();
-		Pnt previousPoint = site;
+		Pnt previousPoint = primary_triangle.getVertexButNot(site);;
 		for(Triangle t: surTriangles) {
 			Pnt nextPoint = t.getVertexButNot(previousPoint, site);
 			polygonPoints.add(nextPoint);
 			previousPoint = nextPoint;
 		}
+		System.out.println("polygonPoints" + polygonPoints);
+		
+		// What's the main direction of that polygon?
+		int polygonDirection = polygonDirection(polygonPoints);
 		
 		// Triangulate that polygon using an ear-clipping method
-		int index = 0;
-		
-		while(!polygonPoints.isEmpty()) {
-			// Just take some points
-			int n = polygonPoints.size();
-			Pnt points[] = new Pnt[] {
-					polygonPoints.get(index % n), 
-					polygonPoints.get((index + 1) % n), 
-					polygonPoints.get((index + 2) % n)};
-			
-			// Now we want to know if these points make an ear
-			// According to http://stackoverflow.com/questions/2816572/diagonal-of-polygon-is-inside-or-outside
-			// p1.x * p2.y + p2.x * p3.y + p3.x * p1.y - p2.x * p1.y - p3.x * p2.y - p1.x * p3.y
-			// That looks a bit like the sum of a cross product to me. so let's do that
-			
-			// First the points are transposed
-			Pnt x = new Pnt(points[0].coord(0), points[1].coord(0), points[2].coord(0));
-			Pnt y = new Pnt(points[0].coord(1), points[1].coord(1), points[2].coord(1));
-			Pnt cross = x.cross(y);
-			double sum = cross.coord(0) + cross.coord(1) + cross.coord(2);
-			boolean isEar = sum > 0;
-			
-			// If it's an ear, we can remove it..
-			if(isEar) {
-				;
-			}
-			
-			// vertices[1] is an ear if 
-			// the line between (vertices[0], vertices[1]) crosses the polygon
-		}
-		
-		// I guess I have an idea how to calculate the new triangles.
-		// How do I add them??
-		
-		// The code seems pretty messed up
-		//
-		
-		
-	}
-
-	/**
-	 * TODO: BUGGED. Sometimes generates incorrect triangles (negative surface)
-	 */
-	@Override
-	public void delaunayRemove(Pnt site, Triangulation trilation) {
-		Triangle primary_triangle = trilation.locate(site);
-		System.out.println("(Lawson) site = " + site.toString() + ",\t triangle1 = " + primary_triangle.toString());
-		List<Triangle> surTriangles = trilation.surroundingTriangles(site, primary_triangle);
-		
-		Pnt anchor = primary_triangle.getVertexButNot(site);
-		
 		Set<Triangle> newTriangles = new HashSet<Triangle>();
-		Set<Triangle> affectedTriangles = new HashSet<Triangle>();
-		
-		//To remove a point, we will connect all neighbours to some anchor and then run the edge-flipping algorithm.
-		for(Triangle triangle : surTriangles){
-			Set<Pnt> vertices = triangle.facetOpposite(site);
-			affectedTriangles.addAll(trilation.neighbors(triangle));
-			if(vertices.contains(anchor))continue;
-			vertices.add(anchor);
-			System.out.println("(Lawson) vertices = " + vertices.toString() + ";\t anchor = " + anchor.toString());
-			Triangle newTriangle = new Triangle(vertices);
-			newTriangles.add(newTriangle);
-			trilation.addToGraph(newTriangle);
-			affectedTriangles.add(newTriangle);
+		int index = 0;
+		while(polygonPoints.size() >= 3) {
+			// If there is an ear at (index + 1), we can extract a triangle
+			if(isEar(polygonPoints, polygonDirection, index)) {
+				int n = polygonPoints.size();
+				Triangle newTriangle = new Triangle(
+						polygonPoints.get(index % n),
+						polygonPoints.get((index + 1) % n), 
+						polygonPoints.get((index + 2) % n));
+				newTriangles.add(newTriangle);
+				trilation.addToGraph(newTriangle);
+				System.out.println("It seems like that is an ear");
+				polygonPoints.remove((index + 1) % polygonPoints.size());
+				System.out.println("Remaining polygon " + polygonPoints);
+			} else {
+				System.out.println("No ears for you, you ear-cutting sadist");
+				index++;
+			}
 		}
+
+		// Potential neighbours of the new triangles
+		Set<Triangle> affectedTriangles = new HashSet<Triangle>();
+		for(Triangle t: surTriangles) {
+			affectedTriangles.addAll(trilation.neighbors(t));
+		}
+		
+		// Get rid of the old triangles
 		for(Triangle triangle : surTriangles){
 			Triangle.moreInfo=true;
 			System.out.println("(Lawson) removing triangle : " + triangle.toString());
 			Triangle.moreInfo=false;
 			trilation.removeFromGraph(triangle);
-			affectedTriangles.remove(triangle);
 		}
 		
-
-		Triangle.moreInfo=true;
-		System.out.println("(Lawson) newTriangles : " + newTriangles.toString());
-		System.out.println("(Lawson) affectedTriangles : " + affectedTriangles.toString());
-		Triangle.moreInfo=false;
+		affectedTriangles.removeAll(surTriangles);
+		affectedTriangles.addAll(newTriangles);
 		
-        // Add the links to each other:
+		// Add the links to each other:
         for (Triangle newTriangle: newTriangles)
         	for (Triangle other: affectedTriangles)
         		if(other != null && newTriangle.isNeighbor(other) && !newTriangle.containsAll(other))
         			trilation.addLinkToGraph(newTriangle, other);
-        
-        
-        //Edge-flip the new vertices:
+		
+		//Edge-flip the new vertices:
     	Queue<FacetTrianglePair> toBeChecked = new LinkedList<FacetTrianglePair>(); //facet + adjacent triangle storage
     	Set<Set<Pnt>> marked = new HashSet<Set<Pnt>>(); //facet storage
     	//Initial facets:
@@ -721,23 +757,22 @@ public class Lawson implements DelaunayAlgorithm {
 	
 	// Tests removing a point from a convex polygon
 	public static void debugRemoval() {
-		// This constructor is obviously  insane
+		// This constructor is obviously insane
 		Triangle initialTriangle = new Triangle(Arrays.asList(
-				new Pnt(-10000, -1000),
-				new Pnt(0, 1000),
-				new Pnt(1000, 0)));
+				new Pnt(-2, 0),
+				new Pnt(2, 0),
+				new Pnt(0, 5)));
+
 		Triangulation trilation = new Triangulation(initialTriangle, new Lawson());
-		
+
 		// Construct a convex polygon
 		Pnt malware = new Pnt(0, 3);
-		trilation.delaunayPlace(new Pnt(0, 5));  // top
-		trilation.delaunayPlace(new Pnt(-2, 0)); // left below
+		Pnt bottom = new Pnt(0, 1);
 		trilation.delaunayPlace(malware);
-		trilation.delaunayPlace(new Pnt(0, 1));  // bottom
-		trilation.delaunayPlace(new Pnt(2, 0));  // right below
+		trilation.delaunayPlace(bottom);
 		trilation.isGraphStillCorrect("debugRemoval - Before removal");
-		
-		// Omg, I can't believe you did that!?
+
+		// I can't believe you did that!?
 		trilation.delaunayRemove(malware);
 		trilation.isGraphStillCorrect("debugRemoval - After removal");
 	}

@@ -328,10 +328,11 @@ public class Pnt {
 	 * Method that DOES calculate the cross product
 	 */
 	public Pnt cross(Pnt other) {
+		//System.out.println("Cross of " + this + " and " + other);
 		return new Pnt(
 				this.coord(1) * other.coord(2) - this.coord(2) * other.coord(1), 
 				this.coord(2) * other.coord(0) - this.coord(0) * other.coord(2),
-				this.coord(0) * other.coord(1) - this.coord(2) * other.coord(0));
+				this.coord(0) * other.coord(1) - this.coord(1) * other.coord(0));
 	}
 
     /* Pnts as simplices */
