@@ -12,6 +12,10 @@ import triangulation.Triangulation;
  */
 public interface DelaunayRefineAlgorithm {
 	
+	/**
+     * Assure that in each triangle each corner is bigger than minangle.
+     * Assure that each triangle has an area below maxArea.
+	 */
 	public void refine(Triangulation trilation, double minangle, double maxArea);
 	
 }

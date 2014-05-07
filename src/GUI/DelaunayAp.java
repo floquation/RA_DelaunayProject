@@ -375,7 +375,14 @@ class DelaunayPanel extends JPanel {
      * @param point the site to be added.
      */
     public void addSite(Pnt point) {
-        dt.delaunayPlace(point);
+        if(!dt.delaunayPlace(point)) {
+        	JOptionPane.showMessageDialog(this, 
+        			"You should first create a boundary and then puts your points in that boundary", 
+        			"Point out of boundary", 
+        			JOptionPane.ERROR_MESSAGE);
+        	// TODO nicer exit
+        	//throw new RuntimeException("that doesn't work anymore");
+        }
     }
 
     /**
@@ -400,7 +407,9 @@ class DelaunayPanel extends JPanel {
 	 * @param selectedItem
 	 */
     public void refine(DelaunayRefineAlgorithm alg) {
-		if(alg!=null)alg.refine(dt,20d/180*Math.PI,200); //TODO: Currently a fixed criterion of 20 degrees and area of 200.
+		//if(alg!=null)alg.refine(dt,20d/180*Math.PI,200); 
+		//TODO: Currently a fixed criterion of 20 degrees and area of 200.
+		dt.refine(dt, alg, 20d/180*Math.PI,200);
 	}
     
     /**

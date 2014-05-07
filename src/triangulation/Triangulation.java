@@ -22,6 +22,7 @@ package triangulation;
 
 import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,6 +31,7 @@ import java.util.Set;
 
 import triangulation.delaunay.algorithms.BowyerWatson;
 import triangulation.delaunay.algorithms.DelaunayAlgorithm;
+import triangulation.delaunay.refineAlgorithms.DelaunayRefineAlgorithm;
 
 /**
  * A 2D Delaunay Triangulation (DT) with incremental site insertion.
@@ -63,7 +65,8 @@ public class Triangulation extends AbstractSet<Triangle> {
     
     // TODO: Do this neatly. 
     // Best method is a point-eating-virus, but Lawson's DelaunayRemover method must work first.
-    private Pnt[] OuterBound = new Pnt[]{new Pnt(0,0), new Pnt(10000,10000)}; //OuterBound. No point may be outside. 
+    private Pnt[] OuterBound = new Pnt[]{new Pnt(-10000,-10000), new Pnt(10000,10000)}; //OuterBound. No point may be outside.
+   // private Pnt[] OuterBound = new Pnt[]{null, null};
     /**
      * All sites must fall within the initial triangle.
      * @param triangle the initial triangle
@@ -185,17 +188,21 @@ public class Triangulation extends AbstractSet<Triangle> {
      * Adds a single point to the triangulation
      * 
      * @author Kevin van As
+     * @author Laurent Verweijen
      * @param site
+     * @return If operation was succesfull
      */
-    public void delaunayPlace (Pnt site) {
-    	if(pointList.contains(site)) return;
-    	if(site.coord(0) < OuterBound[0].coord(0) || site.coord(0) > OuterBound[1].coord(0) || 
+    public boolean delaunayPlace (Pnt site) {
+    	if(pointList.contains(site)) return true;
+    	if(//OuterBound[0] == null || OuterBound[1] == null ||
+    			site.coord(0) < OuterBound[0].coord(0) || site.coord(0) > OuterBound[1].coord(0) || 
     			site.coord(1) < OuterBound[0].coord(1) || site.coord(1) > OuterBound[1].coord(1))
-    		return;
+    		return false;
     	algorithm.delaunayPlace(site,this);
     	pointList.add(site);  
     	
     	if(debug)isGraphStillCorrect("delaunayPlace");
+    	return true;
     }
     
     /**
@@ -207,9 +214,6 @@ public class Triangulation extends AbstractSet<Triangle> {
      * @return success? true if the boundary was successfully added to the triangulation.
      */
 	public boolean delaunayPlaceBoundary(Pnt site, Pnt old_site) {
-    	if(site.coord(0) < OuterBound[0].coord(0) || site.coord(0) > OuterBound[1].coord(0) || 
-    			site.coord(1) < OuterBound[0].coord(1) || site.coord(1) > OuterBound[1].coord(1))
-    		return false;
 		if(old_site.equals(site)){
 			return true;
 		}
@@ -442,5 +446,41 @@ public class Triangulation extends AbstractSet<Triangle> {
         Triangle.moreInfo = false;
 		return graphIsCorrect;
 		
+	}
+
+	public void refine(Triangulation dt, DelaunayRefineAlgorithm alg, double d, int i) {
+		// Create an outer boundary to make refine_algorithm converge
+		
+		double minx = Double.MAX_VALUE, maxx = Double.MIN_VALUE, miny = Double.MAX_VALUE, maxy = Double.MIN_VALUE;
+		for(Set<Pnt> segment : this.boundary_PSLG){
+			for(Pnt vertex : segment){
+				if(vertex.coord(0) < minx) minx = vertex.coord(0);
+				if(vertex.coord(0) > maxx) maxx = vertex.coord(0);
+				if(vertex.coord(1) < miny) miny = vertex.coord(1);
+				if(vertex.coord(1) > maxy) maxy = vertex.coord(1);
+			}
+		}
+		
+		if(!(OuterBound[0].coord(0) == minx && OuterBound[0].coord(1) == miny &&
+				OuterBound[1].coord(0) == maxx && OuterBound[1].coord(1) == maxy)) 
+		{
+			Pnt tl = new Pnt(minx-20,maxy+20);
+			Pnt tr = new Pnt(maxx+20,maxy+20);
+			Pnt bl = new Pnt(minx-20,miny-20);
+			Pnt br = new Pnt(maxx+20,miny-20);
+	
+			OuterBound = new Pnt[2];
+			OuterBound[0] = bl;
+			OuterBound[1] = tr;
+			
+			System.out.println("Boundary is " + tl + ", " + tr + ", " + br + ", " + bl);
+			
+			this.delaunayPlaceBoundary(tl, tr);
+			this.delaunayPlaceBoundary(tr, br);
+			this.delaunayPlaceBoundary(br, bl);
+			this.delaunayPlaceBoundary(bl, tl);	
+		}
+		
+		if(alg!=null)alg.refine(dt, 20d/180*Math.PI,200);
 	}
 }
