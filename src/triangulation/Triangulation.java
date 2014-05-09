@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -75,7 +76,7 @@ public class Triangulation extends AbstractSet<Triangle> {
     	algorithm = algorithmIn;
         triGraph = new Graph<Triangle>();
         boundary_PSLG = new HashSet<Set<Pnt>>();
-        pointList = new HashSet<Pnt>();
+        pointList = new LinkedHashSet<Pnt>();
         addToGraph(triangle);
         initialTriangle = triangle;
     }
