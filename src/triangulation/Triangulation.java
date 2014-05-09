@@ -437,9 +437,9 @@ public class Triangulation extends AbstractSet<Triangle> {
 			else
 				graphIsCorrect = graphIsCorrect && numNBs == 3;
 			
-			if(debug)System.out.println("Triangle " + triangle.toString() + " has " + numNBs + " neighbours in the graph.\tStill correct? " + graphIsCorrect);
+			//if(debug)System.out.println("Triangle " + triangle.toString() + " has " + numNBs + " neighbours in the graph.\tStill correct? " + graphIsCorrect);
 			graphIsCorrect = graphIsCorrect && correctNB;
-			if(debug)System.out.println("These neighbours are indeed neighbours: " + correctNB + ";\tStill correct? " + graphIsCorrect);
+			//if(debug)System.out.println("These neighbours are indeed neighbours: " + correctNB + ";\tStill correct? " + graphIsCorrect);
 		}
 		if(debug)System.out.println("(" + method + ") The graph is correct: " + graphIsCorrect);
 
