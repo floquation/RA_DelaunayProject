@@ -56,6 +56,7 @@ public class IO {
 
 	public static void savePoints(File file, Set<Set<Pnt>> boundary, Set<Pnt> pointList){
 		try {
+			//Write boundary-point file:
 			FileWriter fw = new FileWriter(file,false); //overwrite entire file
 			BufferedWriter bw = new BufferedWriter(fw);
 			
@@ -80,6 +81,29 @@ public class IO {
 			
 			bw.close();
 			fw.close();
+			
+			//Write xPoints, yPoints file:
+			File file2 = new File(file.getPath()+"2");
+			fw = new FileWriter(file2,false); //overwrite entire file
+			bw = new BufferedWriter(fw);
+
+			//Second, store all points (including those contained in the boundary):
+			bw.write("[xPoints]");
+			bw.newLine();
+			for(Pnt vertex : pointList){
+				bw.write(vertex.coord(0) + ",");	
+			}
+			bw.newLine();
+			bw.newLine();
+			bw.write("[yPoints]");
+			bw.newLine();
+			for(Pnt vertex : pointList){
+				bw.write(vertex.coord(1) + ",");	
+			}
+			
+			bw.close();
+			fw.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
