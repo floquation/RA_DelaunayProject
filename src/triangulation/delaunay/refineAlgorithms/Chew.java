@@ -15,7 +15,6 @@ import triangulation.delaunay.algorithms.Lawson;
 public class Chew implements DelaunayRefineAlgorithm{
 	
 	// Chew's defines bad triangles as triangles where circumradius / shortest edge > 1.
-	
 	//private static final boolean debug = true;
 	
 	/**
@@ -34,15 +33,25 @@ public class Chew implements DelaunayRefineAlgorithm{
 			ccLines.add(new ArraySet<Pnt>(Arrays.asList(point, corner)));
 		}
 		
-		// Is there a segment between badTriangle and circumCentre?
-		// neigbours / facetOpposite
-		// Utils/intersect
+		// Is there a segment between badTriangle and circumCentre 
+		// that is visible from triangle?
 		Set<Pnt> blockingSegment = null;
-		
-		for(Set<Pnt> segment : trilation.obtainBoundary()) {
-			for(Set<Pnt> ccLine: ccLines)
-				if(DelaunayUtils.intersect(ccLine, segment))
-					blockingSegment = segment;
+		for(Triangle neighbour: trilation.neighbors(triangle)) {
+			Set<Pnt> union = new ArraySet<Pnt>(triangle);
+			union.retainAll(neighbour);
+			
+			for(Pnt samePoint: union) {
+				// facet is visible from triangle
+				Set<Pnt> facet = neighbour.facetOpposite(samePoint);
+				
+				// Check if it's an encroaching segment
+				if(trilation.isPSLG(facet)) {
+					for(Set<Pnt> ccLine: ccLines) {
+						if(DelaunayUtils.intersect(ccLine, facet))
+							blockingSegment = facet;
+					}
+				}
+			}
 			
 			if(blockingSegment != null) break;
 		}
@@ -61,45 +70,49 @@ public class Chew implements DelaunayRefineAlgorithm{
 			if(!trilation.contains(badTriangle))
 				continue;
 			
+			// Print info
 			Pnt circumCentre = badTriangle.getCircumcenter();
 			Triangle.moreInfo=true;
-			System.out.println("Chew: " + badTriangle + " is a naughty boy");
+			System.out.println("Chew: " + badTriangle + " is a bad triangle");
 			Triangle.moreInfo=false;
 			System.out.println("Chew: It's circumcenter is " + circumCentre);
 			
 			Set<Pnt> blockingSegment = blockingSegmentOrNull(
 					trilation, badTriangle, circumCentre);
 			if(blockingSegment == null) {
-				System.out.println("Chew: We are gonna split a triangle");
+				System.out.println("Chew: We can safely insert the circumcentre");
 				trilation.delaunayPlace(circumCentre);
 			} else {
-				System.out.println("Chew: An elephant is blocking our way" + blockingSegment);
+				System.out.println("Chew: A circumcentre would encroach: " + blockingSegment);
 				Queue<Pnt> toRemove = new LinkedList<Pnt>();
-				// FIXME: The current solution is brute-force
-				// FIXME: java.util.ConcurrentModificationException
+				
+				// We need to remove everything from the diameter circle of the segment.
+				// except the points that are part of the PSLG.
+				// TODO only the circumcenters that are visible from the inserted midpoint?
 				Pnt[] blockingSegmentArray = blockingSegment.toArray(new Pnt[0]); 
 				for(Pnt point: trilation.obtainAllPoints()) {
 					if(point.vsDiamcircle(blockingSegmentArray) < 0) {
-						// FIXME Hack to ignore boundary
-						boolean f = true;
+						boolean isPSLG = false;
 						for(Set<Pnt> unremovable: trilation.obtainBoundary()) {
 							if(unremovable.contains(point))
-								f = false;
+								isPSLG = true;
 						}
-						if(f)
+						if(!isPSLG)
 							toRemove.add(point);
 					}
 				}
 				
-				// Die
+				
+				// Execute toRemove list
 				System.out.println("Chew " + toRemove.size() + " elements need to be removed: " + 
 						toRemove);
-				for(Pnt site: toRemove)
+				for(Pnt site: toRemove) {
 					trilation.delaunayRemove(site);
+				}
 				
+				// Split the segment
 				System.out.println("Chew: The segment is splitted");
-				//Pnt midpoint = blockingSegmentArray[0].midPoint(blockingSegmentArray[1]);
-				//trilation.delaunayPlace(midpoint);
+				assert(trilation.isPSLG(blockingSegment));
 				trilation.splitBoundary(blockingSegment);
 			}
 			
@@ -121,85 +134,22 @@ public class Chew implements DelaunayRefineAlgorithm{
 				new Pnt(0, 10000)));
 
 		Triangulation trilation = new Triangulation(initialTriangle, new Lawson());
-		trilation.delaunayPlaceBoundary(new Pnt(-5, 5), new Pnt(-5, 0));
+		/*trilation.delaunayPlaceBoundary(new Pnt(-5, 5), new Pnt(-5, 0));
 		trilation.delaunayPlaceBoundary(new Pnt(-5, 0), new Pnt(5, 0));
 		trilation.delaunayPlaceBoundary(new Pnt(5, 0), new Pnt(5, 5));
 		trilation.delaunayPlaceBoundary(new Pnt(5, 5), new Pnt(0, 3));
-		trilation.delaunayPlaceBoundary(new Pnt(0, 3), new Pnt(-5, 5));
-		/*
-		trilation.delaunayPlaceBoundary(new Pnt(248.0,253.0), new Pnt(244.0,596.0));
-		trilation.delaunayPlaceBoundary(new Pnt(719.0,599.0), new Pnt(244.0,596.0));
-		trilation.delaunayPlaceBoundary(new Pnt(711.0,262.0), new Pnt(719.0,599.0));
-		trilation.delaunayPlaceBoundary(new Pnt(482.0,435.0), new Pnt(711.0,262.0));
-		trilation.delaunayPlaceBoundary(new Pnt(482.0,435.0), new Pnt(248.0,253.0));*/
+		trilation.delaunayPlaceBoundary(new Pnt(0, 3), new Pnt(-5, 5));*/
+		
+		// Here one blocking segment is ISPL.
+		trilation.delaunayPlaceBoundary(new Pnt(252.0,461.0), new Pnt(249.0,212.0));
+		trilation.delaunayPlaceBoundary(new Pnt(252.0,461.0), new Pnt(503.0,461.0));
+		trilation.delaunayPlaceBoundary(new Pnt(481.0,206.0), new Pnt(503.0,461.0));
+		trilation.delaunayPlaceBoundary(new Pnt(481.0,206.0), new Pnt(369.0,349.0));
+		trilation.delaunayPlaceBoundary(new Pnt(369.0,349.0), new Pnt(249.0,212.0));
 		
 		DelaunayRefineAlgorithm alg = new Chew();
 		for(int i = 0; i < 5; i++)
 			trilation.refine(trilation, alg, 20d/180*Math.PI,200);
-		
-		/*
-		// Construct a convex polygon
-		Pnt malware = new Pnt(0, 3);
-		Pnt bottom = new Pnt(0, 1);
-		trilation.delaunayPlace(malware);
-		trilation.delaunayPlace(bottom);
-		trilation.isGraphStillCorrect("debugRemoval - Before removal");
-
-		// I can't believe you did that!?
-		trilation.delaunayRemove(malware);
-		trilation.isGraphStillCorrect("debugRemoval - After removal");
-		*/
 	}
 }
-
-//int numBadTriangles = badTriangles.size();
-// Infinite loop detector
-/*int newNumBadTriangles = badTriangles.size();
-if(newNumBadTriangles == numBadTriangles) {
-	System.err.println("Phew. Escaped from an infinite loop!");
-	return;
-} else {
-	numBadTriangles = newNumBadTriangles;
-}
-
-	private static Set<Pnt> blockingSegmentOrNull1(
-			Triangulation trilation,
-			Triangle triangle, 
-			Pnt point) {
-		
-		// Three lines from triangle to point
-		Set<Set<Pnt>> ccLines = new ArraySet<Set<Pnt>>();
-		for(Pnt corner: triangle) {
-			ccLines.add(new ArraySet<Pnt>(Arrays.asList(point, corner)));
-		}
-		
-		// Is there a segment between badTriangle and circumCentre?
-		// neigbours / facetOpposite
-		// Utils/intersect
-		Set<Pnt> blockingSegment = null;
-		for(Triangle neighbour: trilation.neighbors(triangle)) {
-			Set<Pnt> union = new ArraySet<Pnt>(triangle);
-			union.retainAll(neighbour);
-			
-			for(Pnt samePoint: union) {
-				Set<Pnt> segment = neighbour.facetOpposite(samePoint);
-				for(Set<Pnt> ccLine: ccLines) {
-					if(DelaunayUtils.intersect(ccLine, segment))
-						blockingSegment = segment;
-				}
-			}
-			
-			if(blockingSegment != null) break;
-		}
-		
-		return blockingSegment;
-		/*if(blockingSegment != null) {
-			Pnt[] blockingSegmentArray = new Pnt[2];
-			return blockingSegment.toArray(blockingSegmentArray);
-		} else
-			return null;* /
-	}
-
-*
-*/
 
