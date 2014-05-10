@@ -15,7 +15,7 @@ import triangulation.delaunay.algorithms.Lawson;
 public class Chew implements DelaunayRefineAlgorithm{
 	
 	// Chew's defines bad triangles as triangles where circumradius / shortest edge > 1.
-	//private static final boolean debug = true;
+	private static final boolean debug = true;
 	
 	/**
 	 * Return the segment between triangle and point.
@@ -27,14 +27,28 @@ public class Chew implements DelaunayRefineAlgorithm{
 			Triangle triangle, 
 			Pnt point) {
 		
+		// Is there a segment between badTriangle and circumCentre 
+		// that is visible from triangle?
+		
 		// Three lines from triangle to point
 		Set<Set<Pnt>> ccLines = new ArraySet<Set<Pnt>>();
 		for(Pnt corner: triangle) {
 			ccLines.add(new ArraySet<Pnt>(Arrays.asList(point, corner)));
 		}
 		
-		// Is there a segment between badTriangle and circumCentre 
-		// that is visible from triangle?
+		// Does the triangle itself contain an enchroached segment?
+		for(Pnt oppositeVertex: triangle) {
+			Set<Pnt> facet = triangle.facetOpposite(oppositeVertex);
+			if(trilation.isPSLG(facet)) {
+				for(Set<Pnt> ccLine: ccLines) {
+					if(DelaunayUtils.intersect(ccLine, facet)) {
+						return facet;
+					}
+				}
+			}
+		}
+		
+		// Does one of the neighbours contain an enchroached segment?
 		Set<Pnt> blockingSegment = null;
 		for(Triangle neighbour: trilation.neighbors(triangle)) {
 			Set<Pnt> union = new ArraySet<Pnt>(triangle);
@@ -47,8 +61,9 @@ public class Chew implements DelaunayRefineAlgorithm{
 				// Check if it's an encroaching segment
 				if(trilation.isPSLG(facet)) {
 					for(Set<Pnt> ccLine: ccLines) {
-						if(DelaunayUtils.intersect(ccLine, facet))
-							blockingSegment = facet;
+						if(DelaunayUtils.intersect(ccLine, facet)) {
+							return facet;
+						}
 					}
 				}
 			}
@@ -56,62 +71,79 @@ public class Chew implements DelaunayRefineAlgorithm{
 			if(blockingSegment != null) break;
 		}
 		
+		// TODO How to handle multiple blockingSegments??
+		// The description says only to remove the blockingSegment that is visible from the interior
+		// But it seems there are multiple such segments or my implementation is wrong?
 		return blockingSegment;
 	}
-
+	
 	@Override
 	public void refine(Triangulation trilation, double minAngle, double maxArea) {
-		System.out.println("Chew is going to refine this!");
+		System.out.println("Chew is called!");
 		Queue<Triangle> badTriangles = DelaunayUtils.obtainBadTriangles(
 				trilation, minAngle, maxArea);
+		int numBadTriangles = badTriangles.size();
 
 		while(!badTriangles.isEmpty()) {
+			if(debug) System.out.println("Chew: " + badTriangles.size() + " bad triangles left");
+			
 			Triangle badTriangle = badTriangles.poll();
 			if(!trilation.contains(badTriangle))
 				continue;
 			
+			Pnt circumCenter = badTriangle.getCircumcenter();
+			
 			// Print info
-			Pnt circumCentre = badTriangle.getCircumcenter();
-			Triangle.moreInfo=true;
-			System.out.println("Chew: " + badTriangle + " is a bad triangle");
-			Triangle.moreInfo=false;
-			System.out.println("Chew: It's circumcenter is " + circumCentre);
+			if(debug) {
+				Triangle.moreInfo=true;
+				System.out.println("Chew: " + badTriangle + " is a bad triangle");
+				Triangle.moreInfo=false;
+				System.out.println("Chew: It's circumcenter is " + circumCenter);
+			}
 			
 			Set<Pnt> blockingSegment = blockingSegmentOrNull(
-					trilation, badTriangle, circumCentre);
+					trilation, badTriangle, circumCenter);
 			if(blockingSegment == null) {
-				System.out.println("Chew: We can safely insert the circumcentre");
-				trilation.delaunayPlace(circumCentre);
+				if(debug)System.out.println("Chew: We can safely insert the circumcentre");
+				trilation.delaunayPlace(circumCenter);
 			} else {
-				System.out.println("Chew: A circumcentre would encroach: " + blockingSegment);
+				if(debug)System.out.println("Chew: A circumcentre would encroach: " + blockingSegment);
 				Queue<Pnt> toRemove = new LinkedList<Pnt>();
 				
-				// We need to remove everything from the diameter circle of the segment.
-				// except the points that are part of the PSLG.
-				// TODO only the circumcenters that are visible from the inserted midpoint?
-				Pnt[] blockingSegmentArray = blockingSegment.toArray(new Pnt[0]); 
+				// We need to remove circumcenters from the diameter circle of the segment.
+				Pnt[] blockingSegmentArray = blockingSegment.toArray(new Pnt[0]);
+				Pnt midpoint = blockingSegmentArray[0].midPoint(blockingSegmentArray[1]);
 				for(Pnt point: trilation.obtainAllPoints()) {
-					if(point.vsDiamcircle(blockingSegmentArray) < 0) {
+					Set<Pnt> midPointFacet = new ArraySet<Pnt>(Arrays.asList(point, midpoint));
+					if(point.vsDiamcircle(blockingSegmentArray) <= 0) {
 						boolean isPSLG = false;
-						for(Set<Pnt> unremovable: trilation.obtainBoundary()) {
-							if(unremovable.contains(point))
+						boolean isVisible = true;
+						for(Set<Pnt> segment: trilation.obtainBoundary()) {
+							// We may not remove points that are part of the boundary
+							if(segment.contains(point)) {
 								isPSLG = true;
+								break;
+							}
+							// We may only remove points that are visible from the midpoint.
+							if(DelaunayUtils.intersect(segment, midPointFacet)) {
+								isVisible = false;
+								break;
+							}
 						}
-						if(!isPSLG)
+						if(!isPSLG && isVisible)
 							toRemove.add(point);
 					}
 				}
 				
-				
 				// Execute toRemove list
-				System.out.println("Chew " + toRemove.size() + " elements need to be removed: " + 
-						toRemove);
+				if(debug)System.out.println("Chew: " + toRemove.size() + 
+						" elements need to be removed: " + toRemove);
 				for(Pnt site: toRemove) {
 					trilation.delaunayRemove(site);
 				}
 				
 				// Split the segment
-				System.out.println("Chew: The segment is splitted");
+				if(debug)System.out.println("Chew: The segment is splitted");
 				assert(trilation.isPSLG(blockingSegment));
 				trilation.splitBoundary(blockingSegment);
 			}
@@ -119,11 +151,19 @@ public class Chew implements DelaunayRefineAlgorithm{
 			if(badTriangles.isEmpty()) {
 				badTriangles = DelaunayUtils.obtainBadTriangles(
 						trilation, minAngle, maxArea);
-				System.out.println("Bad triangles " + badTriangles.size());
+				if(debug)System.out.println("Chew: New bad triangles " + badTriangles.size());
+				
+				if(numBadTriangles <= badTriangles.size()) {
+					if(debug) System.out.println("Chew: Escaped from infinite loop: " + 
+							badTriangles.size() + " instead of " + numBadTriangles + 
+							" triangles left");
+					return;
+				} else {
+					numBadTriangles = badTriangles.size();
+				}
 			}
-			
-			break;
 		}
+		System.out.println("Chew Finished with " + badTriangles.size() + " bad triangles");
 	}
 	
 	public static void main(String args[]) {
