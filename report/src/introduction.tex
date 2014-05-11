@@ -1,0 +1,18 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Given a set of vertices $P = \{p_1 \ldots p_n\}$, a delaunay triangulation is a triangulation $D$ of $P$
+that contains edge $(u, v)$ for $u, v \in P$ if the diametercircle of $u$ and $v$ doesn't have any vertex from $P$ in its interior.
+
+%for every edge $(u, v) \in edges(D)$ the diametercircle of $u$ and $v$ doesn't have any vertex $p \in P$ inside of it.
+
+Another way to define the delaunay triangulation is as the dual graph of the voronoi diagram.
+If we let $cell(p_i)$ be the points in $P$ that are closer to $p_i$ than to any other point of $P$,
+those cells together make the voronoi diagram of $P$.
+
+TODO: Nut van natuurkunde en refinement algorithms uitleggen :-P
+
+We will first look at methods to find and maintain a delaunay triangulation of a set of points.
+Then we will look at delaunay refinement algorithms.
+
+% Something about applications

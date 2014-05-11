@@ -1,0 +1,65 @@
+\section{Delaunay triangulation}
+\label{sec:triangulation}
+
+There are 2 common algorithms to obtain a delaunay triangulation.
+Both algorithms are incremental.
+
+\subsection{Bowyer-Watson}
+\label{sub:bowyer_watson}
+
+\begin{algorithm}
+    \caption{Bowyer-Watson}
+    \begin{algorithmic}
+        \Function{Triangulate}{$P$}
+            \State{Intialize $T$ with a single triangle that contains all vertices of $P$}
+            \ForAll{$p \in P$}
+                \State{Let $D$ be the set all triangles in $T$ whose circumcircle contains $p$}
+                \State{Remove triangles in $D$ from $T$}
+                \State{Split the triangle that contains $p$}
+                \State{Retriangulate the vertices in $D$}
+            \EndFor
+            \State{Remove the initial triangle}
+            \Return $T$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+This algorithm has an expected time of $O(n)$.
+
+\subsection{Lawson}
+\label{sub:lawson}
+
+\begin{algorithm}
+    \caption{Lawson}
+    \begin{algorithmic}
+        \Function{Triangulate}{$P$}
+            \State{Intialize $T$ with a single triangle that contains all vertices of $P$}
+            \ForAll{$p \in P$}
+                \State{Locate the triangle $t$ that contains $p$ and connect the edges of $t$ to $p$}
+                \State{TODO}
+            \EndFor
+            \State{Remove the initial triangle}
+            \Return $T$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+%\begin{algorithm}
+  %\caption{Counting mismatches between two packed \DNA strings
+    %\label{alg:packed-dna-hamming}}
+  %\begin{algorithmic}[1]
+    %\Require{$x$ and $y$ are packed \DNA strings of equal length $n$}
+    %\Statex
+    %\Function{Distance}{$x, y$}
+      %\Let{$z$}{$x \oplus y$} \Comment{$\oplus$: bitwise exclusive-or}
+      %\Let{$\delta$}{$0$}
+      %\For{$i \gets 1 \textrm{ to } n$}
+        %\If{$z_i \neq 0$}
+          %\Let{$\delta$}{$\delta + 1$}
+        %\EndIf
+      %\EndFor
+      %\State \Return{$\delta$}
+    %\EndFunction
+  %\end{algorithmic}
+%\end{algorithm}
+
