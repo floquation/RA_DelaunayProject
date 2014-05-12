@@ -56,7 +56,7 @@ import triangulation.delaunay.refineAlgorithms.DelaunayRefineAlgorithm;
 public class Triangulation extends AbstractSet<Triangle> {
 	
 	private final static boolean debug = false;
-	public final static boolean debugGraph = true;
+	public final static boolean debugGraph = false;
 
     private Triangle mostRecent = null;      	// Most recently "active" triangle
     private Triangle initialTriangle;			// Initial triangle
@@ -229,7 +229,7 @@ public class Triangulation extends AbstractSet<Triangle> {
 		Set<Pnt> facet = new HashSet<Pnt>();
 		facet.add(site);
 		facet.add(old_site);
-		System.out.println(facet.toString());
+		if(debug)System.out.println("(Triangulation) " + facet.toString());
 		boundary_PSLG.add(facet);
     	boolean success = algorithm.delaunayPlaceBoundary(site,old_site,this);
     	if(!success){
@@ -452,7 +452,7 @@ public class Triangulation extends AbstractSet<Triangle> {
 		
 	}
 
-	public void refine(Triangulation dt, DelaunayRefineAlgorithm alg, double d, int i) {
+	public void refine(Triangulation dt, DelaunayRefineAlgorithm alg, double minAngle, double maxArea) {
 		// Create an outer boundary to make refine_algorithm converge (otherwise it must fill an infinite space)
 		
 		double minx = Double.MAX_VALUE, maxx = Double.MIN_VALUE, miny = Double.MAX_VALUE, maxy = Double.MIN_VALUE;
@@ -485,7 +485,7 @@ public class Triangulation extends AbstractSet<Triangle> {
 			this.delaunayPlaceBoundary(bl, tl);	
 		}
 		
-		if(alg!=null)alg.refine(dt, 20d/180*Math.PI,200);
+		if(alg!=null)alg.refine(dt, minAngle, maxArea);
 	}
 	
 

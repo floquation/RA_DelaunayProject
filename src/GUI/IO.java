@@ -14,6 +14,9 @@ import triangulation.Pnt;
 import triangulation.Triangulation;
 
 public class IO {
+	
+	private static final boolean debug = false;
+	
 
 	public static void loadPoints(File file, Triangulation trilation){
 		long time = System.nanoTime();
@@ -26,28 +29,30 @@ public class IO {
 			double y2;
 			
 			//First, load the boundary:
-			System.out.println(s.nextLine());
+			String str = s.nextLine();
+			if(debug)System.out.println(str);
 			s.useDelimiter("[,;]");
-			System.out.println("(IO) Loading boundary.");
+			if(debug)System.out.println("(IO) Loading boundary.");
 			try{
 				while(s.hasNext()){
 					x1=Double.parseDouble(s.next());
 					y1=Double.parseDouble(s.next());
 					x2=Double.parseDouble(s.next());
 					y2=Double.parseDouble(s.next());
-					System.out.println("Loading points: (" + x1 + ", "+ y1 + ") & (" + x2 + ", " + y2 + ");");
+					if(debug)System.out.println("Loading points: (" + x1 + ", "+ y1 + ") & (" + x2 + ", " + y2 + ");");
 					trilation.delaunayPlaceBoundary(new Pnt(x1,y1), new Pnt(x2,y2));
 					s.nextLine();
 				}
 			}catch(NumberFormatException e){}
 			
 			//Second, load all points and add them (note: nothing will happen if the site was already in the triangulation, so we need not care about that):
-			System.out.println(s.nextLine());
-			System.out.println("(IO) Loading points.");
+			str = s.nextLine();
+			if(debug)System.out.println(str);
+			if(debug)System.out.println("(IO) Loading points.");
 			while(s.hasNext()){
 				x1=Double.parseDouble(s.next());
 				y1=Double.parseDouble(s.next());
-				System.out.println("Loading points: (" + x1 + ", "+ y1 + ");");
+				if(debug)System.out.println("Loading points: (" + x1 + ", "+ y1 + ");");
 				trilation.delaunayPlace(new Pnt(x1,y1));
 				s.nextLine();
 			}
@@ -58,7 +63,7 @@ public class IO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("(IO) Elapsed loading time was: " + (System.nanoTime()-time)/1000000000d + " s.");
+		if(debug) System.out.println("(IO) Elapsed loading time was: " + (System.nanoTime()-time)/1000000000d + " s.");
 	}
 
 	public static void savePoints(File file, Set<Set<Pnt>> boundary, Set<Pnt> pointList){

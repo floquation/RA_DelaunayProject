@@ -556,8 +556,8 @@ public class Lawson implements DelaunayAlgorithm {
         
         System.out.println("(Lawson) There are " + adjTriangles.length + " adjacent triangles.");
         Triangle.moreInfo = true;
-        System.out.println(adjTriangles[0].toString());
-        System.out.println(adjTriangles[1].toString());
+        if(debug) System.out.println(adjTriangles[0].toString());
+        if(debug) System.out.println(adjTriangles[1].toString());
         
         //Define the four new adjacent triangles, after splitting the boundary:
         Triangle triangle;

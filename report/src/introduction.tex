@@ -28,12 +28,13 @@ In the case of the triangulation algorithms, the problem is given by a set of po
 Furthermore, the solution can be constrained by a set PSLG (plane straight line graph) of
 boundary vertices, which may not be crossed and whose vertices must occur in the solution.
 
-For the refinement algorithms the input is specified as a set of PSLG boundary vertices and the goal is to triangulate the area with triangles with a certain minimum quality while respecting the boundary''.
+For the refinement algorithms the input is specified as a set of PSLG boundary vertices and
+the goal is to triangulate the area with triangles with a certain minimum quality while respecting the boundary''.
 %For the refinement algorithms the problem is given by ``given a set of PSLG (plane straight line graph)
 %boundary vertices, triangulate the area with triangles with a certain minimum quality while respecting the boundary''.
 The Delaunay refinement algorithms that we will discuss are build on top of a Delaunay triangulation algorithm.
 
-A Delaunay triangulation is defined as follows:
+A Delaunay triangulation (as introduced by Delaunay in 1934 \cite{art:Delaunay1934}) is defined as follows:
 
 % FIXME T = D!!
 ``Given a set of vertices $P = \{p_1 \ldots p_n\}$, a Delaunay triangulation, $D$, is a triangulation, $T$, of $P$

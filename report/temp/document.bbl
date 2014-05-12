@@ -1,7 +1,29 @@
 \begin{thebibliography}{1}
 
+\bibitem{art:Bowyer1981}
+A.~Bowyer.
+\newblock Computing dirichlet tessellations.
+\newblock {\em Computer Journal}, 24(3):162--166, 1981.
+
+\bibitem{art:Delaunay1934}
+B.~N. Delaunay.
+\newblock Sur la {S}phère {V}ide.
+\newblock {\em Izvestia Akademia Nauk SSSR, VII Seria, Otdelenie
+  Matem-aticheskii i Estestvennyka Nauk}, 7:793--800, 1934.
+
 \bibitem{img:airfoilImage}
-J.-D. Müller.
+J.-D. Miller.
 \newblock {Image extracted from Delaundo: cerfacs.fr}.
+
+\bibitem{shewchuk}
+J.~R. Shewchuk.
+\newblock Delaunay refinement mesh generation.
+\newblock Technical report, DTIC Document, 1997.
+
+\bibitem{art:Watson1981}
+D.~F. Watson.
+\newblock Computing the n-dimensional {D}elaunay {T}essellation with
+  {A}pplication to {V}oronoi {P}olytopes.
+\newblock {\em Computer Journal}, 24(3):167--172, 1981.
 
 \end{thebibliography}

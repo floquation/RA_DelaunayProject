@@ -1,42 +1,46 @@
 \section{Delaunay refinement}
 \label{sec:refinement}
 
-As mentioned in the introduction Delaunay refinement algorithms are algorithms that generate triangulations of a polygon in of which each triangle has certain requirement on its quality and its size.
+Delaunay refinement algorithms are algorithms that generate Delaunay triangulations, $D$, of a given PSLG by inserting points in its interior.
+The triangles in $D$ must satisfy certain quality criterion, which serve as an input to the algorithm.
 %For quality a metric can be used that is defined as the circumratio of that triangle divided by the shortest edge.
-To constrain the quality, the minimum angle should be above a certain criterion.
-On the other hand, we want to limit the number of triangles that gets created by the algorithm.
+The most common criteria are the minimum angle present in each triangle and the surface area of each triangle.
+These should be above resp. below a certain treshold criterion specified by the user.
+Note that not all refinement algorithms can ensure termination for all tresholds.
+An optimal refinement algorithm would create as few triangles as possible satisfying the specified criteria.
 
-We will discuss two algorithms for accomplishing this task.
-The first refinement algorithm is from Ruppert.
-The second refinement algorithm is from Chew.
-The input for these algorithms is planar straight line graph (PSLG). 
-The vertices of this graph must occur in the triangulation and the segments of this graph may not be crossed.
-The algorithms assume that a triangulation that satisfies these properties is already available.
-To accomplish those requirements the algorithms have to use one of the triangulation algorithms discussed in section \ref{sec:triangulation} under the hood when inserting or removing vertices.
-\cite{shewchuk}
+We will discuss two algorithms for accomplishing this task: Ruppert's refinement algorithm resp. Chew's second refinement algorithm.
+The algorithms take a Delaunay triangulation satisfying the PSLG as their input and then refine it until all criterea are satisfied.
+Since these algorithms insert (and possibly remove) points into the triangulation, $T$, they make use of the algorithms discussed in the previous section
+to make sure that $T$ maintains the Delaunay property (and thus is equal to $D$) \cite{shewchuk}.
 
-\subsection{Ruppert's algorithm}
+\subsection{Ruppert's refinement algorithm}
 \label{sub:ruppert}
 
-In Rupperts algorithm a segment is encroached if a vertex lies inside its diametrical circle or if the segment doesn't appear in the triangulation.
-As long as segments are enchroached, Rupperts algorithm splits these into subsegments.
-Otherwise Rupperts algorithm inserts the circumcenter of a bad triangle.
-\cite{shewchuk}
+In Ruppert's algorithm, two actions may occur.
+Either the algorithm will split an edge, $e \in \mathrm{PSLG}$ into half,
+or it will insert the circumcenter of a poor quality triangle into the triangulation.
+An edge is split when its encroached by another vertex.
+An edge is encroached by a vertex when the vertex is in its diametrical circle. \cite{shewchuk}
+
+Note that in each insertion step, the resulting triangulation must remain Delaunay,
+which can be ensured by the algorithms of the previous section.
 
 \begin{algorithm}
     \caption{Ruppert}
     \begin{algorithmic}
         \Function{Refinement}{PLSG}
-            \State{Triangulate the vertices bounded by PLSG}
-            \While{there is a triangle $t$ that doesn't meet the requirement}
-                \If{a segment is encroached}
-                    \State{Split that segment}
+            \State{Start with a Delaunay triangulation, $D$, satisfying the PSLG}
+            \While{there is a poor quality triangle, $t$}
+                \If{$t$'s circumcenter encroaches a segment}
+                    \State{Split that segment into half}
                 \Else
-                    \State{Insert the circumcenter of $t$ in the triangulation}
+                    \State{Insert the circumcenter of $t$ in $D$}
                 \EndIf
             \EndWhile
         \EndFunction
     \end{algorithmic}
+    \label{alg:Ruppert}
 \end{algorithm}
 
 \subsection{Chew's second refinement algorithm}
