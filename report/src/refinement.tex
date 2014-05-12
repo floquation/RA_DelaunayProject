@@ -1,7 +1,7 @@
 \section{Delaunay refinement}
 \label{sec:refinement}
 
-Delaunay refinement algorithms are algorithms that generates triangulations of a polygon in of which each triangle has certain requirement on its quality and its size.
+As mentioned in the introduction Delaunay refinement algorithms are algorithms that generate triangulations of a polygon in of which each triangle has certain requirement on its quality and its size.
 %For quality a metric can be used that is defined as the circumratio of that triangle divided by the shortest edge.
 To constrain the quality, the minimum angle should be above a certain criterion.
 On the other hand, we want to limit the number of triangles that gets created by the algorithm.
@@ -12,7 +12,7 @@ The second refinement algorithm is from Chew.
 The input for these algorithms is planar straight line graph (PSLG). 
 The vertices of this graph must occur in the triangulation and the segments of this graph may not be crossed.
 The algorithms assume that a triangulation that satisfies these properties is already available.
-To accomplish those requirements the algorithms use any of the triangulation algorithms discussed in section \ref{sec:triangulation} underneath.
+To accomplish those requirements the algorithms have to use one of the triangulation algorithms discussed in section \ref{sec:triangulation} under the hood when inserting or removing vertices.
 \cite{shewchuk}
 
 \subsection{Ruppert's algorithm}
@@ -27,12 +27,12 @@ Otherwise Rupperts algorithm inserts the circumcenter of a bad triangle.
     \caption{Ruppert}
     \begin{algorithmic}
         \Function{Refinement}{PLSG}
-            \State{triangulate the vertices bounded by PLSG}
+            \State{Triangulate the vertices bounded by PLSG}
             \While{there is a triangle $t$ that doesn't meet the requirement}
                 \If{a segment is encroached}
-                    \State{split that segment}
+                    \State{Split that segment}
                 \Else
-                    \State{insert the circumcenter of $t$ in the triangulation}
+                    \State{Insert the circumcenter of $t$ in the triangulation}
                 \EndIf
             \EndWhile
         \EndFunction
@@ -44,20 +44,20 @@ Otherwise Rupperts algorithm inserts the circumcenter of a bad triangle.
 
 Chew's algorithm also works by repeatedly inserting the circumcenter of a bad triangle.
 There is one exception to this rule.
-If the circumcenter and the triangle are separated from each other by a segment, that segment is split and circumcenters in the diameter of the (unsplitted) segment are removed from the triangulation.
+If the circumcenter and the triangle are separated from each other by a segment, that segment is split (So a new vertex is added in the middle of that segment) and circumcenters in the diameter of the (unsplitted) segment are removed from the triangulation.
 \cite{shewchuk}
 
 \begin{algorithm}
     \caption{Chew}
     \begin{algorithmic}
         \Function{Refinement}{PLSG}
-            \State{triangulate the vertices bounded by PLSG}
+            \State{Triangulate the vertices bounded by PLSG}
             \While{there is a triangle $t$ that doesn't meet the requirement}
                 \If{a triangle $t$ is separated from its circumcenter $c$ by a segment $s$}
-                    \State{remove all previously inserted circumcenters that are in the interior of the diametercircle of $s$}
-                    \State{split $s$}
+                    \State{Remove all previously inserted circumcenters that are in the interior of the diametercircle of $s$}
+                    \State{Split $s$ in 2 subsegments of equal size}
                 \Else
-                    \State{insert c in the triangulation}
+                    \State{Insert c in the triangulation}
                 \EndIf
             \EndWhile
         \EndFunction

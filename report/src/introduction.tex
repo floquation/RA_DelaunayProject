@@ -22,12 +22,20 @@ within any triangle should be above a certain criterion.
 
 In this report, we will analyse several Delaunay triangulation and refinement algorithms
 in terms of their complexity and runtime.
-In the case of the triangulation algorithms, the problem is given by ``given a set of points,
-find the Delaunay triangulation belonging to that set of points''.
-For the refinement algorithms the problem is given by ``given a set of PSLG (plane straight line graph)
-boundary vertices, triangulate the area with triangles with a certain minimum quality while respecting the boundary''.
+In the case of the triangulation algorithms, the problem is given by a set of points and the goal is to find the Delaunay triangulation belonging to that set of points''.
+%In the case of the triangulation algorithms, the problem is given by ``given a set of points,
+%find the Delaunay triangulation belonging to that set of points''.
+Furthermore, the solution can be constrained by a set PSLG (plane straight line graph) of
+boundary vertices, which may not be crossed and whose vertices must occur in the solution.
+
+For the refinement algorithms the input is specified as a set of PSLG boundary vertices and the goal is to triangulate the area with triangles with a certain minimum quality while respecting the boundary''.
+%For the refinement algorithms the problem is given by ``given a set of PSLG (plane straight line graph)
+%boundary vertices, triangulate the area with triangles with a certain minimum quality while respecting the boundary''.
+The Delaunay refinement algorithms that we will discuss are build on top of a Delaunay triangulation algorithm.
 
 A Delaunay triangulation is defined as follows:
+
+% FIXME T = D!!
 ``Given a set of vertices $P = \{p_1 \ldots p_n\}$, a Delaunay triangulation, $D$, is a triangulation, $T$, of $P$
 iff for each triangle $t \in T$ the circumcircle contains no vertex $p \in P$ in its interior.''
 In our definition, it is allowed for other vertices to lie on the circumcircle, which imposes an ambiguity on $D$

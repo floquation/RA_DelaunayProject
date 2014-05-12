@@ -1,19 +1,19 @@
 \section{Delaunay triangulation}
 \label{sec:triangulation}
 
-There are 2 common algorithms to obtain a delaunay triangulation.
+There are 2 common algorithms to obtain a Delaunay triangulation.
 Both algorithms are incremental.
 
-\subsection{Bowyer-Watson}
+\subsection{Bowyer/Watson}
 \label{sub:bowyer_watson}
 
-Unlike Lawson, the Bowyer-Watson algorithm doesn't require any edge flips, but removes vertices that violate the triangulation property and reinserts those.
+Unlike Lawson, the Bowyer/Watson algorithm doesn't require any edge flips, but removes vertices that violate the triangulation property and reinserts those.
 The algorithm can be generalized to more dimensions in a straighforward way.
 This algorithm has an expected runtime of $O(n)$.
 \cite{shewchuk}
 
 \begin{algorithm}
-    \caption{Bowyer-Watson}
+    \caption{Bowyer/Watson}
     \begin{algorithmic}
         \Function{Triangulate}{$P$}
             \State{Intialize $T$ with a single triangle that contains all vertices of $P$}
@@ -28,6 +28,9 @@ This algorithm has an expected runtime of $O(n)$.
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
+
+% TODO
+%The Bowyer-Watson algorithm can be extended to create a constrained Delaunay triangulation.
 
 \subsection{Lawson}
 \label{sub:lawson}
@@ -46,7 +49,7 @@ This algorithm has an expected runtime of $O(n)$.
                 \State{Locate the triangle $t$ that contains $p$ and connect the edges of $t$ to $p$ creating 3 new edges}
                 \State{Call Edge-flip on $p$}
             \EndFor
-            \State{Remove the initial triangle}
+            \State{Remove the initial triangle\\}
             \Return $T$
         \EndFunction
         \Function{Edge-flip}{$p$}
@@ -59,6 +62,9 @@ This algorithm has an expected runtime of $O(n)$.
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
+
+Lawson's algorithm can be extended to create a constrained Delaunay triangulation.
+In such case the algorithm should not edge-flip any edge that is part of the PSLG.
 
 %A worst case analysis can be done by backward analysis.
 %When we have a correct triangulation, we consider choosing a random vertex and removing that vertex from the triangulation.
