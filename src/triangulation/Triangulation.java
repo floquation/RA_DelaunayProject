@@ -56,7 +56,7 @@ import triangulation.delaunay.refineAlgorithms.DelaunayRefineAlgorithm;
 public class Triangulation extends AbstractSet<Triangle> {
 	
 	private final static boolean debug = false;
-	public final static boolean debugGraph = false;
+	public final static boolean debugGraph = true;
 
     private Triangle mostRecent = null;      	// Most recently "active" triangle
     private Triangle initialTriangle;			// Initial triangle
@@ -453,7 +453,7 @@ public class Triangulation extends AbstractSet<Triangle> {
 	}
 
 	public void refine(Triangulation dt, DelaunayRefineAlgorithm alg, double d, int i) {
-		// Create an outer boundary to make refine_algorithm converge
+		// Create an outer boundary to make refine_algorithm converge (otherwise it must fill an infinite space)
 		
 		double minx = Double.MAX_VALUE, maxx = Double.MIN_VALUE, miny = Double.MAX_VALUE, maxy = Double.MIN_VALUE;
 		for(Set<Pnt> segment : this.boundary_PSLG){
@@ -487,4 +487,25 @@ public class Triangulation extends AbstractSet<Triangle> {
 		
 		if(alg!=null)alg.refine(dt, 20d/180*Math.PI,200);
 	}
+	
+
+	/**
+	 * Given a triangle, returns the facets of the triangle which are part of the PSLG boundary
+	 * 
+	 * @author Kevin van As
+	 * @param triangle
+	 * @return Set<Set<Pnt>>, a HashSet of segments which are PSLG and in the triangle
+	 */
+	public Set<Set<Pnt>> getBoundarySegments(Triangle triangle) {
+		Set<Set<Pnt>> segments = new HashSet<Set<Pnt>>();
+		
+		Set<Pnt> segment;
+		for(int i = 0; i<3; i++){ //iterate over vertices of a triangle
+			segment = triangle.facetOpposite(triangle.get(i));
+			if(boundary_PSLG.contains(segment)) segments.add(segment);
+		}
+		
+		return segments;
+	}
+	
 }

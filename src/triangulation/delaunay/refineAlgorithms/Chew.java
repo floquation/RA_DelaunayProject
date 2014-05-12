@@ -41,7 +41,7 @@ public class Chew implements DelaunayRefineAlgorithm{
 			Set<Pnt> facet = triangle.facetOpposite(oppositeVertex);
 			if(trilation.isPSLG(facet)) {
 				for(Set<Pnt> ccLine: ccLines) {
-					if(DelaunayUtils.intersect(ccLine, facet)) {
+					if(DelaunayUtils.intersect(ccLine, facet,false)) {
 						return facet;
 					}
 				}
@@ -61,7 +61,7 @@ public class Chew implements DelaunayRefineAlgorithm{
 				// Check if it's an encroaching segment
 				if(trilation.isPSLG(facet)) {
 					for(Set<Pnt> ccLine: ccLines) {
-						if(DelaunayUtils.intersect(ccLine, facet)) {
+						if(DelaunayUtils.intersect(ccLine, facet,false)) {
 							return facet;
 						}
 					}
@@ -125,7 +125,7 @@ public class Chew implements DelaunayRefineAlgorithm{
 								break;
 							}
 							// We may only remove points that are visible from the midpoint.
-							if(DelaunayUtils.intersect(segment, midPointFacet)) {
+							if(DelaunayUtils.intersect(segment, midPointFacet,false)) {
 								isVisible = false;
 								break;
 							}
