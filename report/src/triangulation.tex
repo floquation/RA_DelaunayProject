@@ -7,6 +7,11 @@ Both algorithms are incremental.
 \subsection{Bowyer-Watson}
 \label{sub:bowyer_watson}
 
+Unlike Lawson, the Bowyer-Watson algorithm doesn't require any edge flips, but removes vertices that violate the triangulation property and reinserts those.
+The algorithm can be generalized to more dimensions in a straighforward way.
+This algorithm has an expected runtime of $O(n)$.
+\cite{shewchuk}
+
 \begin{algorithm}
     \caption{Bowyer-Watson}
     \begin{algorithmic}
@@ -24,10 +29,14 @@ Both algorithms are incremental.
     \end{algorithmic}
 \end{algorithm}
 
-This algorithm has an expected time of $O(n)$.
 
 \subsection{Lawson}
 \label{sub:lawson}
+
+Lawson's algorithm does use Edge-Flips.
+This algorithm works in the 2-dimensional case, but is harder to generalize to more dimensions.
+This algorithm has an expected runtime of $O(n)$.
+\cite{shewchuk}
 
 \begin{algorithm}
     \caption{Lawson}
@@ -35,14 +44,25 @@ This algorithm has an expected time of $O(n)$.
         \Function{Triangulate}{$P$}
             \State{Intialize $T$ with a single triangle that contains all vertices of $P$}
             \ForAll{$p \in P$}
-                \State{Locate the triangle $t$ that contains $p$ and connect the edges of $t$ to $p$}
-                \State{TODO}
+                \State{Locate the triangle $t$ that contains $p$ and connect the edges of $t$ to $p$ creating 3 new edges}
+                \State{Call Edge-flip on $p$}
             \EndFor
             \State{Remove the initial triangle}
             \Return $T$
         \EndFunction
+        \Function{Edge-flip}{$p$}
+            \ForAll{triangles $t$ that contains $p$}
+                \If{$p$ lies in the circumcircle of $t$}
+                    \State{Flip the edge in $t$ that opposes $p$}
+                    \State{Call Edge-Flip on the edges that surround $p$}
+                \EndIf
+            \EndFor
+        \EndFunction
     \end{algorithmic}
 \end{algorithm}
+
+%A worst case analysis can be done by backward analysis.
+%When we have a correct triangulation, we consider choosing a random vertex and removing that vertex from the triangulation.
 
 %\begin{algorithm}
   %\caption{Counting mismatches between two packed \DNA strings
