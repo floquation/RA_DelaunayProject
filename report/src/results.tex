@@ -1,5 +1,27 @@
 \section{Results}
 \label{sec:results}
 
+\subsection{Triangulation}
+\label{sub:triangulation}
 
-Text
+We tested the Bowyer-Watson and Lawson triangulation algorithms for randomly generated inputs of different size.
+For each input size, 40 trials were performed.
+In \ref{fig:triangulation-runtime} we can see the average time that was needed for inserting the points.
+We see that both algorithms don't differ much from each other, but Lawson's triangulation method seems slighty faster than Bowyer-Watsons.
+
+We repeated the same experiments for a constrained triangulation problem.
+In addition to the random generated vertices, we now added a PSLG that contrained the way in way the triangulation is performed.
+The results are in \ref{fig:triangulation-pslg-runtime}.
+Again the difference between the methods is fairly small.
+
+\begin{figure}
+    \includegraphics[width=\columnwidth]{../images/runtime.pdf}
+    \label{fig:triangulation-runtime}
+    \caption{Runtime for triangulation algorithms when input is unconstrained}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\columnwidth]{../images/runtime_segments.pdf}
+    \label{fig:triangulation-pslg-runtime}
+    \caption{Runtime for triangulation algorithms when input is constrained by a PSLG}
+\end{figure}
