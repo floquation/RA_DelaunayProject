@@ -22,8 +22,10 @@ package triangulation;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * A Triangle is an immutable Set of exactly three Pnts.

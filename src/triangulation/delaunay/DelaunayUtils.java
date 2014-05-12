@@ -51,8 +51,10 @@ public abstract class DelaunayUtils {
 	
     /**
      * Determine the cavity caused by site.
+     * If the site is blocked by the PSLG, the blocked triangle is not in the cavity.
      * @param site the site causing the cavity
      * @param triangle the triangle containing site
+     * @author Paul Chew (without PSLG), Kevin van As (with PSLG)
      * @return set of all triangles that have site in their circumcircle
      */
 	public static Set<Triangle> getCavity (Pnt site, Triangle triangle, Triangulation trilation) {
@@ -63,8 +65,24 @@ public abstract class DelaunayUtils {
         //Find the cavity:
         toBeChecked.add(triangle);
         marked.add(triangle);
-        while (!toBeChecked.isEmpty()) {
+whileLoop:while (!toBeChecked.isEmpty()) {
             triangle = toBeChecked.remove();
+            //Check for boundary segments (PSLG)
+            Set<Set<Pnt>> boundarySegments = trilation.getBoundarySegments(triangle);
+            //Check for each boundary segment if it blocks the site out:
+            for(Set<Pnt> segment : boundarySegments){
+            	Pnt oppVertex = triangle.getVertexButNot(segment.toArray(new Pnt[0])); //Opposite vertex
+            	//Check whether the line <site,oppVertex> intersects the segment. If true, then oppVertex is blocked from site.
+            	Set<Pnt> lineToBeChecked = new HashSet<Pnt>();
+            	lineToBeChecked.add(site);
+            	lineToBeChecked.add(oppVertex);
+            	
+            	if(intersect(lineToBeChecked,segment,true)){
+                	continue whileLoop;            		
+            	}
+            }
+            
+            //Not PSLG: check if triangle is a part of the cavity
             if (site.vsCircumcircle(triangle.toArray(new Pnt[0])) == 1)
                 continue; // Site outside triangle => triangle not in cavity
             encroached.add(triangle); // Triangle in cavity.
@@ -76,26 +94,39 @@ public abstract class DelaunayUtils {
             }
         }
         
-        //TODO: Does not work with PSLG yet.
-//        Set<Triangle> toBeRemoved = new HashSet<Triangle>();
-//        //Remove the PSLG from the cavity:
-//        for(Triangle tr_cav: encroached){
-//        	for(Pnt vertex : tr_cav){
-//        		Set<Pnt> facet = tr_cav.facetOpposite(vertex);
-//        		if(trilation.isPSLG(facet)){
-//        			//We found a PSLG facet in the cavity. Check if its interior or exterior:
-//        			if(encroached.contains(trilation.neighborOpposite(vertex, tr_cav))){
-//        				//Interior, since the opposite neighbour is inside the cavity as well!
-//        				//Remove the triangle from the cavity, because it may not be altered.
-//        				toBeRemoved.add(tr_cav);
-//        			}
-//        		}
-//        	}
-//        }
-//        encroached.removeAll(toBeRemoved);
-        
         return encroached;
     }
+	
+//    /**
+//     * Determine the cavity caused by site.
+//     * @param site the site causing the cavity
+//     * @param triangle the triangle containing site
+//	   * @author Paul Chew
+//     * @return set of all triangles that have site in their circumcircle
+//     */
+//	public static Set<Triangle> getCavity (Pnt site, Triangle triangle, Triangulation trilation) {
+//        Set<Triangle> encroached = new HashSet<Triangle>();
+//        Queue<Triangle> toBeChecked = new LinkedList<Triangle>();
+//        Set<Triangle> marked = new HashSet<Triangle>();
+//        
+//        //Find the cavity:
+//        toBeChecked.add(triangle);
+//        marked.add(triangle);
+//        while (!toBeChecked.isEmpty()) {
+//            triangle = toBeChecked.remove();
+//            if (site.vsCircumcircle(triangle.toArray(new Pnt[0])) == 1)
+//                continue; // Site outside triangle => triangle not in cavity
+//            encroached.add(triangle); // Triangle in cavity.
+//            // Check the neighbors
+//            for (Triangle neighbor: trilation.neighbors(triangle)){
+//                if (marked.contains(neighbor)) continue;
+//                marked.add(neighbor);
+//                toBeChecked.add(neighbor);
+//            }
+//        }
+//        
+//        return encroached;
+//    }
 	
 	/**
 	 * Returns true if the triangle is locally Delaunay w.r.t. the point "site".
