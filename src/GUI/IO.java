@@ -16,6 +16,7 @@ import triangulation.Triangulation;
 public class IO {
 
 	public static void loadPoints(File file, Triangulation trilation){
+		long time = System.nanoTime();
 		try{
 			FileReader fr = new FileReader(file);
 			Scanner s = new Scanner(fr);
@@ -25,23 +26,28 @@ public class IO {
 			double y2;
 			
 			//First, load the boundary:
-			s.nextLine();
+			System.out.println(s.nextLine());
 			s.useDelimiter("[,;]");
-			while(s.hasNextInt()){
-				x1=s.nextDouble();
-				y1=s.nextDouble();
-				x2=s.nextDouble();
-				y2=s.nextDouble();
-				trilation.delaunayPlaceBoundary(new Pnt(x1,y1), new Pnt(x2,y2));
-				s.nextLine();
-			}
+			System.out.println("(IO) Loading boundary.");
+			try{
+				while(s.hasNext()){
+					x1=Double.parseDouble(s.next());
+					y1=Double.parseDouble(s.next());
+					x2=Double.parseDouble(s.next());
+					y2=Double.parseDouble(s.next());
+					System.out.println("Loading points: (" + x1 + ", "+ y1 + ") & (" + x2 + ", " + y2 + ");");
+					trilation.delaunayPlaceBoundary(new Pnt(x1,y1), new Pnt(x2,y2));
+					s.nextLine();
+				}
+			}catch(NumberFormatException e){}
 			
-			//Second, load all poDoubles and add them (note: nothing will happen if it a site was already in the triangulation, so we need not care about that):
-			s.nextLine();
-			s.nextLine();
-			while(s.hasNextDouble()){
-				x1=s.nextDouble();
-				y1=s.nextDouble();
+			//Second, load all points and add them (note: nothing will happen if the site was already in the triangulation, so we need not care about that):
+			System.out.println(s.nextLine());
+			System.out.println("(IO) Loading points.");
+			while(s.hasNext()){
+				x1=Double.parseDouble(s.next());
+				y1=Double.parseDouble(s.next());
+				System.out.println("Loading points: (" + x1 + ", "+ y1 + ");");
 				trilation.delaunayPlace(new Pnt(x1,y1));
 				s.nextLine();
 			}
@@ -52,6 +58,7 @@ public class IO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("(IO) Elapsed loading time was: " + (System.nanoTime()-time)/1000000000d + " s.");
 	}
 
 	public static void savePoints(File file, Set<Set<Pnt>> boundary, Set<Pnt> pointList){
@@ -61,7 +68,7 @@ public class IO {
 			BufferedWriter bw = new BufferedWriter(fw);
 			
 			//First, store the boundary:
-			bw.write("[Boundary Facets]");
+			bw.write("[Boundary Facets];");
 			bw.newLine();
 			for(Set<Pnt> facet : boundary){
 				for(Pnt vertex : facet){
@@ -72,7 +79,7 @@ public class IO {
 
 			bw.newLine();
 			//Second, store all points (including those contained in the boundary):
-			bw.write("[All Points]");
+			bw.write("[All Points];");
 			bw.newLine();
 			for(Pnt vertex : pointList){
 				bw.write(vertex.coord(0) + "," + vertex.coord(1) + ";");	
@@ -88,14 +95,14 @@ public class IO {
 			bw = new BufferedWriter(fw);
 
 			//Second, store all points (including those contained in the boundary):
-			bw.write("[xPoints]");
+			bw.write("[xPoints];");
 			bw.newLine();
 			for(Pnt vertex : pointList){
 				bw.write(vertex.coord(0) + ",");	
 			}
 			bw.newLine();
 			bw.newLine();
-			bw.write("[yPoints]");
+			bw.write("[yPoints];");
 			bw.newLine();
 			for(Pnt vertex : pointList){
 				bw.write(vertex.coord(1) + ",");	

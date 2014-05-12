@@ -17,10 +17,12 @@ public abstract class DelaunayUtils {
 	 * Facets are sets of exactly two Pnts.
 	 * 
 	 * @author Kevin van As
-	 * @param facet: Facet to be intersected with the other facet
-	 * @return true of the facet's intersect.
+	 * @param facet1 is the facet to be intersected with the other facet
+	 * @param facet2 is the facet to be intersected with the other facet
+	 * @param includeCorners is true if the corner of a segment is a part of the segment
+	 * @return true iff the facets intersect.
 	 */
-	public static boolean intersect(Set<Pnt> facet1, Set<Pnt> facet2){
+	public static boolean intersect(Set<Pnt> facet1, Set<Pnt> facet2, boolean includeCorners){
 		if(facet1.size() != 2 || facet2.size() != 2) 
 			throw new IllegalArgumentException("Facet should have size 2");
 		
@@ -43,7 +45,8 @@ public abstract class DelaunayUtils {
 		double mu = BmA.cross_z(PmA)/det;
 		double lamb = PmA.cross_z(PmQ)/det;
 		
-		return 0 <= mu && mu <= 1 && 0 <= lamb && lamb <= 1;
+		return (includeCorners && (0 <= mu && mu <= 1 && 0 <= lamb && lamb <= 1)) ||
+				(!includeCorners && (0 < mu && mu < 1 && 0 < lamb && lamb < 1));
 	}
 	
     /**
@@ -64,7 +67,7 @@ public abstract class DelaunayUtils {
             triangle = toBeChecked.remove();
             if (site.vsCircumcircle(triangle.toArray(new Pnt[0])) == 1)
                 continue; // Site outside triangle => triangle not in cavity
-            encroached.add(triangle);
+            encroached.add(triangle); // Triangle in cavity.
             // Check the neighbors
             for (Triangle neighbor: trilation.neighbors(triangle)){
                 if (marked.contains(neighbor)) continue;
@@ -147,7 +150,7 @@ public abstract class DelaunayUtils {
 		facet2.add(pnt4);
 		facet2.add(pnt3);
 		
-		System.out.println("Intersects? " + intersect(facet1,facet2));
+		System.out.println("Intersects? " + intersect(facet1,facet2,true));
 		
 	}
 	

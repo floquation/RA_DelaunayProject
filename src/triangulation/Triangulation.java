@@ -55,7 +55,8 @@ import triangulation.delaunay.refineAlgorithms.DelaunayRefineAlgorithm;
  */
 public class Triangulation extends AbstractSet<Triangle> {
 	
-	private final static boolean debug = true;
+	private final static boolean debug = false;
+	public final static boolean debugGraph = false;
 
     private Triangle mostRecent = null;      	// Most recently "active" triangle
     private Triangle initialTriangle;			// Initial triangle
@@ -71,6 +72,7 @@ public class Triangulation extends AbstractSet<Triangle> {
     /**
      * All sites must fall within the initial triangle.
      * @param triangle the initial triangle
+     * @param algorithmIn is the default algorithm to be used for triangulation
      */
     public Triangulation (Triangle triangle, DelaunayAlgorithm algorithmIn) {
     	algorithm = algorithmIn;
@@ -194,6 +196,7 @@ public class Triangulation extends AbstractSet<Triangle> {
      * @return If operation was succesfull
      */
     public boolean delaunayPlace (Pnt site) {
+    	//System.out.println("(Triangulation) delaunayPlace begins.");
     	if(pointList.contains(site)) return true;
     	if(//OuterBound[0] == null || OuterBound[1] == null ||
     			site.coord(0) < OuterBound[0].coord(0) || site.coord(0) > OuterBound[1].coord(0) || 
@@ -202,7 +205,7 @@ public class Triangulation extends AbstractSet<Triangle> {
     	algorithm.delaunayPlace(site,this);
     	pointList.add(site);  
     	
-    	if(debug)isGraphStillCorrect("delaunayPlace");
+    	if(debugGraph)isGraphStillCorrect("delaunayPlace");
     	return true;
     }
     
@@ -399,7 +402,7 @@ public class Triangulation extends AbstractSet<Triangle> {
 	 */
 	public void isGraphStillCorrect(String method){
 		boolean graphIsCorrect = isGraphStillCorrect(method,false);
-		System.out.println("(" + method + ") The graph is correct: " + graphIsCorrect);
+		if(debugGraph)System.out.println("(" + method + ") The graph is correct: " + graphIsCorrect);
 	}
 
 	/**
@@ -411,7 +414,7 @@ public class Triangulation extends AbstractSet<Triangle> {
 	 */
 	public boolean isGraphStillCorrect(String method, boolean debug){
         Triangle.moreInfo = true;
-		if(debug)System.out.println("(" + method + ") Starting a total graph validation.");
+		if(debugGraph)System.out.println("(" + method + ") Starting a total graph validation.");
 		boolean graphIsCorrect = true;
 		for(Triangle triangle : triGraph.nodeSet()){
 			Set<Triangle> NBs = this.neighbors(triangle);
@@ -442,7 +445,7 @@ public class Triangulation extends AbstractSet<Triangle> {
 			graphIsCorrect = graphIsCorrect && correctNB;
 			//if(debug)System.out.println("These neighbours are indeed neighbours: " + correctNB + ";\tStill correct? " + graphIsCorrect);
 		}
-		if(debug)System.out.println("(" + method + ") The graph is correct: " + graphIsCorrect);
+		if(debugGraph)System.out.println("(" + method + ") The graph is correct: " + graphIsCorrect);
 
         Triangle.moreInfo = false;
 		return graphIsCorrect;

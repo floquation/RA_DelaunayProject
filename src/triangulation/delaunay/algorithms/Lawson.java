@@ -200,7 +200,7 @@ public class Lawson implements DelaunayAlgorithm {
 	            
 	            boolean connectToB = true;
 	            for(Set<Pnt> old_facet : facet_CDs){
-	            	if(DelaunayUtils.intersect(old_facet, facet_BC)){
+	            	if(DelaunayUtils.intersect(old_facet, facet_BC,true)){
 	            		//Intersection detected: connect to A, not to B.
 	            		connectToB = false;
 	            		break;
@@ -326,7 +326,7 @@ public class Lawson implements DelaunayAlgorithm {
            
             if(debug)System.out.println("(Lawson) the newTriangles are: " + newTriangles.toString());
             
-            trilation.isGraphStillCorrect("Lawson place boundary - before edge-flip",true);
+            if(Triangulation.debugGraph)trilation.isGraphStillCorrect("Lawson place boundary - before edge-flip",true);
             
             if(debug)System.out.println("Start edge-flip");
             //Step 5: Run edge-swap algorithm on all newly created facets + the boundary.
@@ -365,7 +365,7 @@ public class Lawson implements DelaunayAlgorithm {
         for (Pnt vertex: triangle) {
         	facet_pq = triangle.facetOpposite(vertex);
         	if(!facet_pq.equals(facet_pq_previous)) //Do not move back, only forward.
-        		if(DelaunayUtils.intersect(facet_pq, facet_AB)) break; //facet_pq now contains the troublesome facet
+        		if(DelaunayUtils.intersect(facet_pq, facet_AB,true)) break; //facet_pq now contains the troublesome facet
         }
         return facet_pq;
 	}
@@ -433,7 +433,7 @@ public class Lawson implements DelaunayAlgorithm {
 //    		System.out.println("FacetTrianglePair in graph? " + trilation.contains(triangle_x));
     		
     		//Check if the facet may be flipped (i.e., not part of the PSLG)
-    		if(trilation.isPSLG(facet_x)) continue;
+    		if(trilation.isPSLG(facet_x)) continue; //TODO: turn off if measure without PSLG
     		
     		//Check if locally Delaunay:
     		Pnt pnt = triangle_x.getVertexButNot(facet_x.toArray(new Pnt[0]));
@@ -496,7 +496,7 @@ public class Lawson implements DelaunayAlgorithm {
     	                if (t1.isNeighbor(t2))
     	                    trilation.addLinkToGraph(t1, t2);
     	        
-                boolean result = trilation.isGraphStillCorrect("Edge-Flip",false);
+                if(Triangulation.debugGraph){boolean result = trilation.isGraphStillCorrect("Edge-Flip",false);}
              //   if(!result) System.exit(0);
                 
 //    			push facet d, e, f and g (IF UNMARKED) and mark them.
@@ -755,7 +755,7 @@ public class Lawson implements DelaunayAlgorithm {
         }
     	
     	System.out.println("(Lawson) Graph is correct pre-edge-flip?");
-    	trilation.isGraphStillCorrect("Lawson remover", true);
+    	 if(Triangulation.debugGraph)trilation.isGraphStillCorrect("Lawson remover", true);
     	
         edgeFlip(trilation,toBeChecked);
 	}
@@ -778,11 +778,11 @@ public class Lawson implements DelaunayAlgorithm {
 		Pnt bottom = new Pnt(0, 1);
 		trilation.delaunayPlace(malware);
 		trilation.delaunayPlace(bottom);
-		trilation.isGraphStillCorrect("debugRemoval - Before removal");
+		 if(Triangulation.debugGraph)trilation.isGraphStillCorrect("debugRemoval - Before removal");
 
 		// I can't believe you did that!?
 		trilation.delaunayRemove(malware);
-		trilation.isGraphStillCorrect("debugRemoval - After removal");
+		 if(Triangulation.debugGraph)trilation.isGraphStillCorrect("debugRemoval - After removal");
 	}
 	
     public static void main(String[] args){

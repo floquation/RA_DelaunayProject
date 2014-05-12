@@ -48,7 +48,7 @@ public class BowyerWatson implements DelaunayAlgorithm {
 	/**
      * Update the triangulation by removing the cavity triangles and then
      * filling the cavity with new triangles.
-     * @author Paul Chew
+     * @author Paul Chew (no PSLG), Kevin van As (PSLG included)
      * @param site the site that created the cavity
      * @param cavity the triangles with site in their circumcircle
      */
@@ -89,12 +89,20 @@ public class BowyerWatson implements DelaunayAlgorithm {
         
     }
 
+    /**
+     * TODO: Required for refinement algorithms.
+     * 
+     */
 	@Override
 	public void splitBoundary(Set<Pnt> segment, Triangulation trilation) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * TODO: Required for refinement algorithms.
+	 * 
+	 */
 	@Override
 	public void delaunayRemove(Pnt site, Triangulation trilation) {
 		// TODO Auto-generated method stub
