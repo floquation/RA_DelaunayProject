@@ -12,7 +12,7 @@ import triangulation.delaunay.DelaunayUtils;
 
 public class Ruppert implements DelaunayRefineAlgorithm{
 	
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 
 	@Override
 	public void refine(Triangulation trilation, double minAngle, double maxArea) {
@@ -65,7 +65,7 @@ public class Ruppert implements DelaunayRefineAlgorithm{
 							//We have a very troublesome triangle, with two very small minAngles.
 							//Kevin's alternative to Ruppert: remove the point with the big angle.
 							Pnt bigAnglePoint = cur_triangle.getMaxAnglePoint();
-							System.out.println("(Ruppert) We have a poor triangle: " + cur_triangle.toString() + ";\t with poor point: " + bigAnglePoint.toString());
+							if(debug)System.out.println("(Ruppert) We have a poor triangle: " + cur_triangle.toString() + ";\t with poor point: " + bigAnglePoint.toString());
 							//trilation.delaunayRemove(bigAnglePoint); //TODO: BUGGED because Lawson's remover is bugged.
 						}
 					}
@@ -77,7 +77,7 @@ public class Ruppert implements DelaunayRefineAlgorithm{
 					//break outerLoop;
 				}
 			}
-			if(debug)break; //This will terminate after 1 iteration, allowing a step-by-step visualisation.
+			if(debug) break; //This will terminate after 1 iteration, allowing a step-by-step visualisation.
 		}
 		if(debug)System.out.println("(Ruppert) Ruppert terminates.");
 	}

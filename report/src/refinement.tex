@@ -16,12 +16,13 @@ to make sure that $T$ maintains the Delaunay property (and thus is equal to $D$)
 
 \subsection{Ruppert's refinement algorithm}
 \label{sub:ruppert}
+\nocite{shewchuk2}
 
 In Ruppert's algorithm, two actions may occur.
 Either the algorithm will split an edge, $e \in \mathrm{PSLG}$ into half,
 or it will insert the circumcenter of a poor quality triangle into the triangulation.
 An edge is split when its encroached by another vertex.
-An edge is encroached by a vertex when the vertex is in its diametrical circle. \cite{shewchuk}
+An edge is encroached by a vertex when the vertex is in its diametral circle. \cite{shewchuk}
 
 Note that in each insertion step, the resulting triangulation must remain Delaunay,
 which can be ensured by the algorithms of the previous section.
@@ -45,20 +46,21 @@ which can be ensured by the algorithms of the previous section.
 
 \subsection{Chew's second refinement algorithm}
 \label{sub:chews}
+\nocite{art:Rand2011}
 
-Chew's algorithm also works by repeatedly inserting the circumcenter of a bad triangle.
-There is one exception to this rule.
-If the circumcenter and the triangle are separated from each other by a segment, that segment is split (So a new vertex is added in the middle of that segment) and circumcenters in the diameter of the (unsplitted) segment are removed from the triangulation.
+Chew's second refinement algorithm also works by repeatedly inserting the circumcenter of a bad triangle.
+Unlike Ruppert's algorithm, if the circumcenter and the triangle are separated from each other by a PSLG segment, that segment is split instead.
+Also, any previously-inserted circumcenters in the diametral circle of that (unsplitted) segment are removed from the triangulation.
 \cite{shewchuk}
 
 \begin{algorithm}
     \caption{Chew}
     \begin{algorithmic}
         \Function{Refinement}{PLSG}
-            \State{Triangulate the vertices bounded by PLSG}
-            \While{there is a triangle $t$ that doesn't meet the requirement}
-                \If{a triangle $t$ is separated from its circumcenter $c$ by a segment $s$}
-                    \State{Remove all previously inserted circumcenters that are in the interior of the diametercircle of $s$}
+            \State{Triangulate the vertices bounded by the PLSG}
+            \While{there is a bad triangle $t$}
+                \If{$t$ is separated from its circumcenter $c$ by a segment $s$}
+                    \State{Remove all previously inserted circumcenters that are in the interior of the diametral circle of $s$}
                     \State{Split $s$ in 2 subsegments of equal size}
                 \Else
                     \State{Insert c in the triangulation}
