@@ -162,7 +162,7 @@ whileLoop:while (!toBeChecked.isEmpty()) {
 			//System.out.println("(Utils) area = " + area);
 			if(angle < minAngle || area > maxArea) queue.add(triangle); 
 		}
-		System.out.println("(Utils) size = " + queue.size());
+		//System.out.println("(Utils) size = " + queue.size());
 		return queue;
 	}
 	

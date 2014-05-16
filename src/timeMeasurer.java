@@ -32,7 +32,9 @@ public class timeMeasurer {
 	 * <<Refinement>>
 	 * 4 = Ruppert + Lawson with PSLG1
 	 */
-	private static int whichAlg = 3;
+	private static int whichAlg = 4;
+	
+	private static final String PSLG_file = "PSLG_car.pnt";
 	
 	
 	public static void main(String[] args){
@@ -41,7 +43,9 @@ public class timeMeasurer {
 		
         double[] domain = new double[]{10,10,1000,500};
         int N = (int)Math.pow(2, 12);
-        int repeat = 100;
+        int repeat = 1;
+        double minAngle = 30d/180*Math.PI;
+        double maxArea = 50;
         
 //Measurement code\\
         
@@ -133,11 +137,11 @@ public class timeMeasurer {
 		        
 		        //Refine using Ruppert:
 		           
-		        //System.out.println("<<Starting measurement>>");
+		        System.out.println("<<Starting measurement: Ruppert - Lawson>>");
 		
 		    	long time = System.nanoTime();
 		    	 
-		    	//trilation.refine(trilation, new Ruppert(), 20d/180*Math.PI,200);
+		    	trilation.refine(trilation, new Ruppert(), minAngle, maxArea);
 		    	
 		    	
 				resultTimes[i] = (double)((System.nanoTime()-time)/1000000000d);
@@ -167,8 +171,8 @@ public class timeMeasurer {
                 new Triangle(new Pnt(-10000,10000), new Pnt(10000,10000), new Pnt(0,-10000));
 		Triangulation trilation = new Triangulation(tri0,alg);
 		
-
-		if(whichAlg == 2 || whichAlg == 3 || whichAlg == 4) IO.loadPoints(new File("PSLG1.pnt"),trilation);
+		
+		if(whichAlg == 2 || whichAlg == 3 || whichAlg == 4) IO.loadPoints(new File(PSLG_file),trilation);
 		
 		
 		return trilation;

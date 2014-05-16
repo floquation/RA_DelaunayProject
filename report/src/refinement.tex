@@ -46,19 +46,19 @@ which can be ensured by the algorithms of the previous section.
 \subsection{Chew's second refinement algorithm}
 \label{sub:chews}
 
-Chew's algorithm also works by repeatedly inserting the circumcenter of a bad triangle.
-There is one exception to this rule.
-If the circumcenter and the triangle are separated from each other by a segment, that segment is split (So a new vertex is added in the middle of that segment) and circumcenters in the diameter of the (unsplitted) segment are removed from the triangulation.
+Chew's second refinement algorithm also works by repeatedly inserting the circumcenter of a bad triangle.
+Unlike Ruppert's algorithm, if the circumcenter and the triangle are separated from each other by a PSLG segment, that segment is split instead.
+Also, any previously-inserted circumcenters in the diametrical circle of that (unsplitted) segment are removed from the triangulation.
 \cite{shewchuk}
 
 \begin{algorithm}
     \caption{Chew}
     \begin{algorithmic}
         \Function{Refinement}{PLSG}
-            \State{Triangulate the vertices bounded by PLSG}
-            \While{there is a triangle $t$ that doesn't meet the requirement}
-                \If{a triangle $t$ is separated from its circumcenter $c$ by a segment $s$}
-                    \State{Remove all previously inserted circumcenters that are in the interior of the diametercircle of $s$}
+            \State{Triangulate the vertices bounded by the PLSG}
+            \While{there is a bad triangle $t$}
+                \If{$t$ is separated from its circumcenter $c$ by a segment $s$}
+                    \State{Remove all previously inserted circumcenters that are in the interior of the diametrical circle of $s$}
                     \State{Split $s$ in 2 subsegments of equal size}
                 \Else
                     \State{Insert c in the triangulation}

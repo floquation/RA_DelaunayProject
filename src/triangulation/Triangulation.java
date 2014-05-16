@@ -259,12 +259,12 @@ public class Triangulation extends AbstractSet<Triangle> {
 		Set<Pnt> segmentAC = new HashSet<Pnt>();
 		segmentAC.add(segmentAB_ar[0]);
 		segmentAC.add(pntC);
-		System.out.println("(Triangulation) Adding the segment to PSLG: " + segmentAC.toString());
+		if(debug)System.out.println("(Triangulation) Adding the segment to PSLG: " + segmentAC.toString());
 		boundary_PSLG.add(segmentAC);
 		Set<Pnt> segmentCB = new HashSet<Pnt>();
 		segmentCB.add(segmentAB_ar[1]);
 		segmentCB.add(pntC);
-		System.out.println("(Triangulation) Adding the segment to PSLG: " + segmentCB.toString());
+		if(debug)System.out.println("(Triangulation) Adding the segment to PSLG: " + segmentCB.toString());
 		boundary_PSLG.add(segmentCB);
 		
     	pointList.add(pntC);
@@ -282,6 +282,14 @@ public class Triangulation extends AbstractSet<Triangle> {
 	public void delaunayRemove(Pnt site) {
     	pointList.remove(site);    	
 		algorithm.delaunayRemove(site,this);
+		
+		Set<Set<Pnt>> toBeRemoved = new HashSet<Set<Pnt>>();
+		for(Set<Pnt> segment : boundary_PSLG){
+			if(segment.contains(site)){
+				toBeRemoved.add(segment);
+			}
+		}
+		boundary_PSLG.removeAll(toBeRemoved);
 		
     	if(debug)isGraphStillCorrect("delaunayRemove");
 	}
