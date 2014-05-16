@@ -36,7 +36,7 @@ public class Chew implements DelaunayRefineAlgorithm{
 			ccLines.add(new ArraySet<Pnt>(Arrays.asList(point, corner)));
 		}
 		
-		// Does the triangle itself contain an enchroached segment?
+		// Does the triangle itself contain an encroached segment?
 		for(Pnt oppositeVertex: triangle) {
 			Set<Pnt> facet = triangle.facetOpposite(oppositeVertex);
 			if(trilation.isPSLG(facet)) {
@@ -48,7 +48,7 @@ public class Chew implements DelaunayRefineAlgorithm{
 			}
 		}
 		
-		// Does one of the neighbours contain an enchroached segment?
+		// Does one of the neighbours contain an encroached segment?
 		Set<Pnt> blockingSegment = null;
 		for(Triangle neighbour: trilation.neighbors(triangle)) {
 			Set<Pnt> union = new ArraySet<Pnt>(triangle);
@@ -104,8 +104,14 @@ public class Chew implements DelaunayRefineAlgorithm{
 			Set<Pnt> blockingSegment = blockingSegmentOrNull(
 					trilation, badTriangle, circumCenter);
 			if(blockingSegment == null) {
-				if(debug)System.out.println("Chew: We can safely insert the circumcentre");
-				trilation.delaunayPlace(circumCenter);
+				if(circumCenter.vsCircumcircle(trilation.obtainInitialTriangle().toArray(new Pnt[0])) == -1){
+					if(debug)System.out.println("Chew: We can safely insert the circumcenter");
+					if(!trilation.delaunayPlace(circumCenter)) {
+						if(debug)System.out.println("Chew: Failed to insert circumcenter at " + circumCenter);
+					}
+				} else {
+					if(debug)System.out.println("Chew: I'm not going to insert a circumcenter at: " + circumCenter);
+				}
 			} else {
 				if(debug)System.out.println("Chew: A circumcentre would encroach: " + blockingSegment);
 				Queue<Pnt> toRemove = new LinkedList<Pnt>();
@@ -139,6 +145,7 @@ public class Chew implements DelaunayRefineAlgorithm{
 				if(debug)System.out.println("Chew: " + toRemove.size() + 
 						" elements need to be removed: " + toRemove);
 				for(Pnt site: toRemove) {
+					// FIXME: Illegal argument exception??
 					trilation.delaunayRemove(site);
 				}
 				
@@ -162,6 +169,7 @@ public class Chew implements DelaunayRefineAlgorithm{
 					numBadTriangles = badTriangles.size();
 				}
 			}
+			System.out.println("Num baddies is " + badTriangles.size());
 		}
 		System.out.println("Chew Finished with " + badTriangles.size() + " bad triangles");
 	}

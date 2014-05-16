@@ -2,7 +2,7 @@
 \label{sec:results}
 
 \subsection{Delaunay triangulation algorithm}
-\label{sub:triangulation}
+\label{sub:results:triangulation}
 
 We tested the Bowyer-Watson and Lawson triangulation algorithms for randomly generated inputs of different size.
 This is done by recursively adding $n$ points to the initial triangulation.
@@ -15,21 +15,39 @@ In addition to the random generated vertices, we now added a PSLG that contraine
 The results are in Figure \ref{fig:triangulation-pslg-runtime}.
 Again the difference between the methods is fairly small.
 
-\begin{figure}
+\begin{figure}[ht]
+    \centering
     \includegraphics[width=\columnwidth]{../images/runtime.pdf}
     \label{fig:triangulation-runtime}
     \caption{Runtime for triangulation algorithms when input is unconstrained}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht]
+    \centering
     \includegraphics[width=\columnwidth]{../images/runtime_segments.pdf}
-    \label{fig:triangulation-pslg-runtime}
     \caption{Runtime for triangulation algorithms when input is constrained by a PSLG}
+    \label{fig:triangulation-pslg-runtime}
 \end{figure}
 
 \subsection{Ruppert's refinement algorithm}
+\label{sub:results:ruppert}
 
-\begin{figure}
+Ruppert's algorithm has been ran on the boundary of a car.
+Two parameters of the algorithm were varies.
+The maximum area of each triangle was restricted to values ranging from $50$ to $300$.
+The minimum angle in each triangle was restricted to values ranging from $10\degr$ to $300\degr$.
+In Figure \ref{fig:ruppert-runtime} we see the runtime.
+Unfortunately, the algorithm didn't converge for each setting, so the algorithms were cut off when they ran for more than $10$ seconds.
+An example of such a triangulation can be found in Figure \ref{fig:result_Car20}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\columnwidth]{../images/ruppert.pdf}
+    \caption{Runtime of Ruppert's algorithm}
+    \label{fig:ruppert-runtime}
+\end{figure}
+
+\begin{figure}[ht]
     \centering
     \includegraphics[width=\columnwidth]{../images/Car_Ruppert20.png}
     \caption{Triangulation generated using Ruppert's refinement algorithm for a car. The white lines are PSLG boundary elements.
@@ -44,3 +62,4 @@ Again the difference between the methods is fairly small.
     The criterea were set to a minimum angle of 20$\degr$ and a maximum area of 200.}
     \label{fig:result_TU20}
 \end{figure}
+
