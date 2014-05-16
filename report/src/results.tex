@@ -5,10 +5,14 @@
 \label{sub:results:triangulation}
 
 We tested the Bowyer-Watson and Lawson triangulation algorithms for randomly generated inputs of different size.
-This is done by recursively adding $n$ points to the initial triangulation.
+%This is done by recursively adding $n$ points to the initial triangulation.
+
 For each input size, 40 trials were performed.
 In Figure \ref{fig:triangulation-runtime} we can see the average time that was needed for inserting the points.
 We see that both algorithms don't differ much from each other, but Lawson's triangulation method seems slighty faster than Bowyer-Watsons.
+
+%The result without PSLG boundary segments is shown in Figure \ref{fig:triangulation/runtime} and
+%with the segments in Figure \ref{fig:result_runtimeSegments}.
 
 We repeated the same experiments for a constrained triangulation problem.
 In addition to the random generated vertices, we now added a PSLG that contrained the way in way the triangulation is performed.
