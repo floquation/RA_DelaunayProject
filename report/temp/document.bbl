@@ -5,6 +5,10 @@ A.~Bowyer.
 \newblock Computing dirichlet tessellations.
 \newblock {\em Computer Journal}, 24(3):162--166, 1981.
 
+\bibitem{code:Chew}
+L.~P. Chew.
+\newblock {Voronoi/Delaunay Applet}, 2007.
+
 \bibitem{art:Delaunay1934}
 B.~N. Delaunay.
 \newblock Sur la {S}phère {V}ide.
@@ -15,10 +19,20 @@ B.~N. Delaunay.
 J.-D. Miller.
 \newblock {Image extracted from Delaundo: cerfacs.fr}.
 
+\bibitem{art:Rand2011}
+A.~Rand.
+\newblock Where and how chew's second delaunay refinement algorithm works.
+\newblock {\em CCCG Toronoto}, 2011.
+
 \bibitem{shewchuk}
 J.~R. Shewchuk.
 \newblock Delaunay refinement mesh generation.
 \newblock Technical report, DTIC Document, 1997.
+
+\bibitem{shewchuk2}
+J.~R. Shewchuk.
+\newblock Delaunay refinement algorithms for triangular mesh generation.
+\newblock Technical report, University of California at Berkeley, 2001.
 
 \bibitem{art:Watson1981}
 D.~F. Watson.

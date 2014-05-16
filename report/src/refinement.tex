@@ -16,12 +16,13 @@ to make sure that $T$ maintains the Delaunay property (and thus is equal to $D$)
 
 \subsection{Ruppert's refinement algorithm}
 \label{sub:ruppert}
+\nocite{shewchuk2}
 
 In Ruppert's algorithm, two actions may occur.
 Either the algorithm will split an edge, $e \in \mathrm{PSLG}$ into half,
 or it will insert the circumcenter of a poor quality triangle into the triangulation.
 An edge is split when its encroached by another vertex.
-An edge is encroached by a vertex when the vertex is in its diametrical circle. \cite{shewchuk}
+An edge is encroached by a vertex when the vertex is in its diametral circle. \cite{shewchuk}
 
 Note that in each insertion step, the resulting triangulation must remain Delaunay,
 which can be ensured by the algorithms of the previous section.
@@ -45,10 +46,11 @@ which can be ensured by the algorithms of the previous section.
 
 \subsection{Chew's second refinement algorithm}
 \label{sub:chews}
+\nocite{art:Rand2011}
 
 Chew's second refinement algorithm also works by repeatedly inserting the circumcenter of a bad triangle.
 Unlike Ruppert's algorithm, if the circumcenter and the triangle are separated from each other by a PSLG segment, that segment is split instead.
-Also, any previously-inserted circumcenters in the diametrical circle of that (unsplitted) segment are removed from the triangulation.
+Also, any previously-inserted circumcenters in the diametral circle of that (unsplitted) segment are removed from the triangulation.
 \cite{shewchuk}
 
 \begin{algorithm}
@@ -58,7 +60,7 @@ Also, any previously-inserted circumcenters in the diametrical circle of that (u
             \State{Triangulate the vertices bounded by the PLSG}
             \While{there is a bad triangle $t$}
                 \If{$t$ is separated from its circumcenter $c$ by a segment $s$}
-                    \State{Remove all previously inserted circumcenters that are in the interior of the diametrical circle of $s$}
+                    \State{Remove all previously inserted circumcenters that are in the interior of the diametral circle of $s$}
                     \State{Split $s$ in 2 subsegments of equal size}
                 \Else
                     \State{Insert c in the triangulation}
