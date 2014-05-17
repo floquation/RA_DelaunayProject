@@ -40,18 +40,30 @@ Ruppert's algorithm has been ran on the boundary of a car.
 Two parameters of the algorithm were varies.
 The maximum area of each triangle was restricted to values ranging from $50$ to $300$.
 The minimum angle in each triangle was restricted to values ranging from $10\degr$ to $300\degr$.
-In Figure \ref{fig:ruppert-runtime} we see the runtime.
 Unfortunately, the algorithm didn't converge for each setting, so the algorithms were cut off when they ran for more than $10$ seconds.
-An example of such a triangulation can be found in Figure \ref{fig:result_Car20}.
+An example of a triangulation obtained by running Rupperts algorithm can be found in Figure \ref{fig:result_Car20}.
+
+In Figure \ref{fig:ruppert-runtime} we see the runtime for different minimum angles and in Figure \ref{fig:ruppert-runtime2} we see the runtime for different maximum areas.
+From the graph we notice that the algorithm seems to converge fastest when we limit the smallest angle to about $23\degr$.
+When the angles are either big or small, the algorithm converges at a much slower rate.
+Making the maximum area bigger, seems to make the runtime slightly slower.
+Surprisingly, setups in which the maximum area is divisible by 100 seem to converge faster than other setups.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\columnwidth]{../images/ruppert.pdf}
-    \caption{Runtime of Ruppert's algorithm}
+    \caption{Runtime of Ruppert's algorithm for different angles}
     \label{fig:ruppert-runtime}
 \end{figure}
 
 \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\columnwidth]{../images/ruppert2.pdf}
+    \caption{Runtime of Ruppert's algorithm for different max areas}
+    \label{fig:ruppert-runtime2}
+\end{figure}
+
+\begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{../images/Car_Ruppert20.png}
     \caption{Triangulation generated using Ruppert's refinement algorithm for a car. The white lines are PSLG boundary elements.
