@@ -36,18 +36,19 @@ Again the difference between the methods is fairly small.
 \subsection{Ruppert's refinement algorithm}
 \label{sub:results:ruppert}
 
-Ruppert's algorithm has been ran on the boundary of a car.
-Two parameters of the algorithm were varies.
-The maximum area of each triangle was restricted to values ranging from $50$ to $300$.
-The minimum angle in each triangle was restricted to values ranging from $10\degr$ to $300\degr$.
-Unfortunately, the algorithm didn't converge for each setting, so the algorithms were cut off when they ran for more than $10$ seconds.
+Ruppert's algorithm has been ran on the boundary of a car while two parameters of the algorithm were varied:
+The maximum area of each triangle was restricted to values ranging from $50$ to $300$ and
+the minimum angle in each triangle was restricted to values ranging from $10\degr$ to $300\degr$.
+As a triangulation method we used Lawson, but since the graphs in Figure \ref{fig:triangulation-pslg-runtime} are close to each other, the result would likely be similar if Bowyer-Watson had been used.
 An example of a triangulation obtained by running Rupperts algorithm can be found in Figure \ref{fig:result_Car20}.
+Unfortunately, the algorithm didn't converge for each setting, so the experiments were cut off when they ran for more than $10$ seconds.
 
 In Figure \ref{fig:ruppert-runtime} we see the runtime for different minimum angles and in Figure \ref{fig:ruppert-runtime2} we see the runtime for different maximum areas.
-From the graph we notice that the algorithm seems to converge fastest when we limit the smallest angle to about $23\degr$.
+In Figure \ref{fig:ruppert-runtime} we notice that the algorithm seems to converge fastest when we limit the smallest angle to about $23\degr$.
 When the angles are either big or small, the algorithm converges at a much slower rate.
-Making the maximum area bigger, seems to make the runtime slightly slower.
-Surprisingly, setups in which the maximum area is divisible by 100 seem to converge faster than other setups.
+In Figure \ref{fig:ruppert-runtime2} it can be seen that making the maximum area bigger generally makes the runtime slightly slower.
+%Surprisingly, setups in which the maximum area is divisible by 100 seem to converge faster than other setups.
+Surprisingly we see that at certain minimum angles, the algorithm does converge when the maximum area is an even multitude of 50 ($0, 100, 200, \ldots$), but not when the maximum area is an uneven multitude of 50 ($50, 150, 250, \ldots$).
 
 \begin{figure}[ht]
     \centering
