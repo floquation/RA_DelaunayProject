@@ -1,9 +1,6 @@
 \begin{abstract}
-We study the performance of several deterministic and randomized algorithms for primality in terms of runtime and error.
-The tested algorithms are ``trial division'' (TD), ``Wheel-Sieve'' (WS), ``Solovay-Strassen'' (SS), ``Miller-Rabin'' (MR) and ``Angrawal-Kayal-Saxena'' (AKS).
+We study the runtime of two different Delaunay triangulation algorithms: Lawson's and Bowyer-Watson's.
+Theoretically, these algorithms should have an $O(n)$ complexity, while our implementation behaves exponentially in $n$.
 
-Amongst the determinstic algorithms, WS had the best runtime, followed by TD.
-While AKS proves that primality testing is in $P$, it performed slowest by far, because it is extremely slow on prime input.
-As the input grows larger, SS and MR will eventually outperform all deterministic algorithms in terms of runtime.
-In terms of error, they retain an error, but this error grows negligibly small as the input size increases.
+Then, we studied the behaviour of Ruppert's Delaunay refinement algorithm.
 \end{abstract}
