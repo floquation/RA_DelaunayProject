@@ -65,14 +65,14 @@ our implementation of the Delaunay triangulation algorithms scales exponentially
 %Surprisingly, setups in which the maximum area is divisible by 100 seem to converge faster than other setups.
 %Surprisingly we see that at certain minimum angles, the algorithm does converge when the maximum area is an even multitude of 50 ($0, 100, 200, \ldots$), but not when the maximum area is an uneven multitude of 50 ($50, 150, 250, \ldots$).
 
-\begin{figure}[ht]
+\begin{figure}[t!]
     \centering
     \includegraphics[width=\columnwidth]{../images/ruppert.pdf}
     \caption{Runtime of Ruppert's refinement algorithm for different angles. Note that an execution time of 10s means ``does not converge''.}
     \label{fig:ruppert-runtime}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[t!]
     \centering
     \includegraphics[width=\columnwidth]{../images/ruppert2.pdf}
     \caption{Like \figref{fig:ruppert-runtime}, but now as a function of the specified maximum cell area.}
