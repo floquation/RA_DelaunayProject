@@ -24,14 +24,14 @@ In both cases, the complexity is steeper than linear in a log-log scale.
 This indicates a steeper behaviour than polynomial, meaning exponential.
 Theoretically, these algorithms should run in $O(n)$ (see \secref{sub:bowyer_watson}), implying our implementation has a weak searching step somewhere.
 
-\begin{figure}[ht]
+\begin{figure}[t!]
     \centering
     \includegraphics[width=\columnwidth]{../images/runtime.pdf}
     \label{fig:triangulation-runtime}
     \caption{Runtime for triangulation algorithms when input is unconstrained}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[t!]
     \centering
     \includegraphics[width=\columnwidth]{../images/runtime_segments.pdf}
     \caption{Runtime for triangulation algorithms when input is constrained by a PSLG}

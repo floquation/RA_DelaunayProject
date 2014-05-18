@@ -1,15 +1,17 @@
 \relax 
 \citation{img:airfoilImage}
 \citation{img:airfoilImage}
+\citation{art:Delaunay1934}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{\thepage }}
 \newlabel{sec:introduction}{{1}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Example of an unstructured grid around some airfoils consisting of solely triangles \cite  {img:airfoilImage}.}}{\thepage }}
 \newlabel{fig:introAirfoil}{{1}{\thepage }}
-\citation{art:Delaunay1934}
 \citation{art:Bowyer1981}
 \citation{art:Watson1981}
 \citation{shewchuk}
 \citation{shewchuk}
+\citation{shewchuk}
+\citation{shewchuk2}
 \citation{shewchuk}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Delaunay triangulation}{\thepage }}
 \newlabel{sec:triangulation}{{2}{\thepage }}
@@ -21,12 +23,10 @@
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Lawson}}{\thepage }}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Delaunay refinement}{\thepage }}
 \newlabel{sec:refinement}{{3}{\thepage }}
-\citation{shewchuk2}
-\citation{shewchuk}
-\citation{art:Rand2011}
-\citation{shewchuk}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Ruppert's refinement algorithm}{\thepage }}
 \newlabel{sub:ruppert}{{3.1}{\thepage }}
+\citation{art:Rand2011}
+\citation{shewchuk}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Ruppert}}{\thepage }}
 \newlabel{alg:Ruppert}{{3}{\thepage }}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Chew's second refinement algorithm}{\thepage }}
@@ -36,32 +36,32 @@
 \newlabel{sec:results}{{4}{\thepage }}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Delaunay triangulation algorithm}{\thepage }}
 \newlabel{sub:results:triangulation}{{4.1}{\thepage }}
-\newlabel{fig:triangulation-runtime}{{4.1}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Runtime for triangulation algorithms when input is unconstrained}}{\thepage }}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Ruppert's refinement algorithm}{\thepage }}
 \newlabel{sub:results:ruppert}{{4.2}{\thepage }}
+\newlabel{fig:triangulation-runtime}{{4.1}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Runtime for triangulation algorithms when input is unconstrained}}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Runtime for triangulation algorithms when input is constrained by a PSLG}}{\thepage }}
+\newlabel{fig:triangulation-pslg-runtime}{{3}{\thepage }}
 \citation{code:Chew}
 \bibstyle{abbrv}
 \bibdata{sigproc}
 \bibcite{art:Bowyer1981}{1}
 \bibcite{code:Chew}{2}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Runtime of Ruppert's refinement algorithm for different angles. Note that an execution time of 10s means ``does not converge''.}}{\thepage }}
+\newlabel{fig:ruppert-runtime}{{4}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{\thepage }}
+\newlabel{sec:conclusion}{{5}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Like Fig. 4\hbox {}, but now as a function of the specified maximum cell area.}}{\thepage }}
+\newlabel{fig:ruppert-runtime2}{{5}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Triangulation generated using Ruppert's refinement algorithm for a car. The white lines are PSLG boundary elements. The criterea were set to a minimum angle of 20$\tmspace  +\thinmuskip {.1667em}^{\circ }$ and a maximum area of 200.}}{\thepage }}
+\newlabel{fig:result_Car20}{{6}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Acknowledgments}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {7}References}{\thepage }}
 \bibcite{art:Delaunay1934}{3}
 \bibcite{img:airfoilImage}{4}
 \bibcite{art:Rand2011}{5}
 \bibcite{shewchuk}{6}
 \bibcite{shewchuk2}{7}
 \bibcite{art:Watson1981}{8}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Runtime for triangulation algorithms when input is constrained by a PSLG}}{\thepage }}
-\newlabel{fig:triangulation-pslg-runtime}{{3}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{\thepage }}
-\newlabel{sec:conclusion}{{5}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Runtime of Ruppert's refinement algorithm for different angles. Note that an execution time of 10s means ``does not converge''.}}{\thepage }}
-\newlabel{fig:ruppert-runtime}{{4}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Acknowledgments}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {7}References}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Like Fig. 4\hbox {}, but now as a function of the specified maximum cell area.}}{\thepage }}
-\newlabel{fig:ruppert-runtime2}{{5}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Triangulation generated using Ruppert's refinement algorithm for a car. The white lines are PSLG boundary elements. The criterea were set to a minimum angle of 20$\tmspace  +\thinmuskip {.1667em}^{\circ }$ and a maximum area of 200.}}{\thepage }}
-\newlabel{fig:result_Car20}{{6}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Triangulation generated using Ruppert's refinement algorithm for the TU Delft logo. The white lines are PSLG boundary elements. The criteria were set to a minimum angle of 20$\tmspace  +\thinmuskip {.1667em}^{\circ }$ and a maximum area of 200.}}{\thepage }}
 \newlabel{fig:result_TU20}{{7}{\thepage }}
