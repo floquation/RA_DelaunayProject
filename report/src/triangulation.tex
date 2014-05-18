@@ -7,6 +7,11 @@ Both algorithms are incremental.
 \subsection{Bowyer-Watson}
 \label{sub:bowyer_watson}
 
+\begin{figure}
+    \includegraphics[width=\columnwidth]{../images/BW.png}
+    \caption{Demonstration of Bowyer-Watson}
+\end{figure}
+
 The Bowyer-Watson (B-W) algorithm was independently introduced by Bowyer \cite{art:Bowyer1981} and Watson \cite{art:Watson1981} in 1981.
 When incrementally inserting a vertex, B-W removes all triangles that violate the Delaunay property after insertion of the new vertex.
 Then, the boundary of the created cavity is connected to the new vertex, which results in a new Delaunay triangulation.
@@ -46,6 +51,11 @@ and the result is two locally Delaunay triangles''.
 Here, `locally Delaunay' is defined as `Delaunay', while only taking these two triangles into account.
 Lawson's algorithm is easily implemented in 2 dimensions, but is harder to generalize to more dimensions.
 This algorithm has an expected runtime of $O(n)$ \cite{shewchuk}.
+
+\begin{figure}
+    \includegraphics[width=\columnwidth]{../images/Lawson.png}
+    \caption{Demonstration of Lawson}
+\end{figure}
 
 \begin{algorithm}
     \caption{Lawson}
