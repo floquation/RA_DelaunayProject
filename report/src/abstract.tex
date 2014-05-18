@@ -1,16 +1,22 @@
 \begin{abstract}
-    We study the performance of several Delaunay triangulation and refinement algorithms.
-    The Delaunay triangulation algorithms which we look into are Bowyer-Watson and Lawson.
-    %Lawson's algorithm makes use of edge flips whereas Ruppert's algorithm avoids these.
-    The Delaunay refinement algorithm which we look into is from Ruppert.
-    We also discuss Chew's second refinement algorithm, but we didn't got it implemented succesfully within the time constraints.
-    We look at the runtime of both triangulation and refinement algorithms for different requirements and study its behaviour.
-    Although the Delaunay algorithms have a linear runtime complexity in theory, 
-    the results indicate that our implementations require exponential time.
+%     We study the performance of several Delaunay triangulation and refinement algorithms.
+%     The Delaunay triangulation algorithms which we look into are Bowyer-Watson and Lawson.
+%     %Lawson's algorithm makes use of edge flips whereas Ruppert's algorithm avoids these.
+%     The Delaunay refinement algorithm which we look into is from Ruppert.
+%     We also discuss Chew's second refinement algorithm, but we didn't got it implemented succesfully within the time constraints.
+%     We look at the runtime of both triangulation and refinement algorithms for different requirements and study its behaviour.
+%     Although the Delaunay algorithms have a linear runtime complexity in theory, 
+%     the results indicate that our implementations require exponential time.
 
-%We study the runtime of two different Delaunay triangulation algorithms: Lawson's and Bowyer-Watson's.
-%Theoretically, these algorithms should have an $O(n)$ complexity, while our implementation behaves exponentially in $n$.
+We study the runtime of two different Delaunay triangulation algorithms: Lawson's and Bowyer-Watson's.
+This was done for the case with and without the inclusion of PSLG boundary segments.
+Theoretically, these algorithms should have an $O(n)$ complexity, while our implementation behaves exponentially in $n$.
+The difference between Lawson and Bowyer-Watson was marginal.
 
-%Then, we studied the behaviour of Ruppert's Delaunay refinement algorithm.
-%>>>>>>> 6ac2a53268808009cb33a26710e4aa9424cc089b
+Then, we studied the behaviour of Ruppert's Delaunay refinement algorithm.
+This too is exponential in $n$, which is caused by its dependency on the previous two algorithms.
+As a function of the termination criterea of the refinement algorithm (minimum angle within a triangle and maximum area of a triangle),
+it was found that both tight as loose criterea are bad for convergence.
+The best rate of convergence was found for a minimum angle of about $21\degr$.
+The convergence behaviour as a function of the maximum area is a complex function dependent on the shape of the boundary.
 \end{abstract}
